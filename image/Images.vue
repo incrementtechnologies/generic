@@ -124,7 +124,7 @@ export default {
     }
   },
   components: {
-    'empty': require('modules/empty/Empty.vue')
+    'empty': require('components/increment/generic/empty/Empty.vue')
   },
   methods: {
     redirect(parameter){
