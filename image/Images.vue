@@ -31,7 +31,7 @@ button input{
   margin-bottom: 100px;
 }
 .image-list{
-  width: 1000px;
+  width: 100%;
   float: left;
   margin-top: 25px;
 }
@@ -97,8 +97,8 @@ ul li:hover{
   cursor: pointer;
 }
 
-@media screen (max-width: 992px){
-  .item{
+@media (max-width: 991px){
+  .card{
     width: 49%;
   }
 }
