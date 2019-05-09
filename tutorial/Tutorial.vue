@@ -95,6 +95,9 @@ export default {
           $('#quickTutorialNavigationModal').modal('hide')
         }
       })
+    },
+    close(){
+      $('#quickTutorialNavigationModal').modal('hide')
     }
   }
 }
