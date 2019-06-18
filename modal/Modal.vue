@@ -134,15 +134,21 @@ export default {
       this.errorMessage = null
       return true
     },
+    addParams(){
+      for (var i = 0; i < this.property.params.length; i++) {
+        let item = this.property.params[i]
+        this.parameter[item.variable] = item.value
+      }
+    },
     submit(){
       // $('#loading').css({display: 'block'})
       if(this.validate()){
-        console.log(this.parameter)
-        // this.APIRequest(this.property.route, this.parameter).then(response => {
-        //   this.hideModal()
-        //   $('#loading').css({display: 'none'})
-        //   this.$parent.retrieve(this.property.sort)
-        // })
+        this.addParams()
+        this.APIRequest(this.property.route, this.parameter).then(response => {
+          this.hideModal()
+          $('#loading').css({display: 'none'})
+          this.$parent.retrieve(this.property.sort)
+        })
         $('#loading').css({display: 'none'})
       }else{
         $('#loading').css({display: 'none'})
