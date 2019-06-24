@@ -34,6 +34,11 @@
               <option v-for="itemOption in item.options" v-bind:value="itemOption.value">{{itemOption.label}}</option>
             </select>
 
+            <!-- Select Tag with decremental value -->
+            <select class="form-control" v-if="item.type === 'select_decrement'" v-model="item.value" v-bind:placeholder="item.placeholder">
+              <option v-for="itemOption in item.options.max" v-bind:value="item.option.start - itemOption">{{(item.option.start - itemOption) + item.options.label}}</option>
+            </select>
+
             <!-- Select Tag with incremental value -->
             <select class="form-control" v-if="item.type === 'select_increment'" v-model="item.value" v-bind:placeholder="item.placeholder">
               <option v-for="itemOption in item.options.max" v-bind:value="itemOption">{{itemOption + item.options.label}}</option>
@@ -41,6 +46,7 @@
 
             <!-- Textarea tag -->
             <textarea class="form-control" v-bind:rows="item.textAreaRows" v-if="item.type === 'textarea'" v-bind:placeholder="item.placeholder" v-bind:class="{'invalid-inputs': item.value !== null && (item.validation.size > item.value.length)}" v-model="item.value"></textarea>
+
           </div>
         </div>
         <div class="modal-footer">
