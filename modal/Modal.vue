@@ -31,17 +31,17 @@
             
             <!-- Select Tag with specified value -->
             <select class="form-control" v-if="item.type === 'select_specified'" v-model="item.value" v-bind:placeholder="item.placeholder">
-              <option v-for="itemOption in item.options" v-bind:value="itemOption.value">{{itemOption.label}}</option>
+              <option v-for="itemOption in item.options" v-bind:value="itemOption.value" :key="itemOption">{{itemOption.label}}</option>
             </select>
 
             <!-- Select Tag with decremental value -->
             <select class="form-control" v-if="item.type === 'select_decrement'" v-model="item.value" v-bind:placeholder="item.placeholder">
-              <option v-for="itemOption in item.options.max" v-bind:value="item.option.start - itemOption">{{(item.option.start - itemOption) + item.options.label}}</option>
+              <option v-for="itemOption in item.options.max" v-bind:value="item.options.start - itemOption" :key="itemOption">{{(item.options.start - itemOption) + item.options.label}}</option>
             </select>
 
             <!-- Select Tag with incremental value -->
             <select class="form-control" v-if="item.type === 'select_increment'" v-model="item.value" v-bind:placeholder="item.placeholder">
-              <option v-for="itemOption in item.options.max" v-bind:value="itemOption">{{itemOption + item.options.label}}</option>
+              <option v-for="itemOption in item.options.max" v-bind:value="itemOption" :key="itemOption">{{itemOption + item.options.label}}</option>
             </select>
 
             <!-- Textarea tag -->
