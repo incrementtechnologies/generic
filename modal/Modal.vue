@@ -13,7 +13,7 @@
               <label><b>Opps! </b>{{errorMessage}}</label>
           </span>
           <br v-if="errorMessage !== null">
-          <div class="form-group" v-bind:class="{'col-lg-6': item.row === 'half', 'col-lg-4': item.row === 'one-third', 'col-lg-3': item.row === 'one-fourth','float-left': item.row !== 'full'}" v-for="item, index in property.inputs">
+          <div class="form-group" v-bind:class="{'col-lg-6': item.row === 'half', 'col-lg-4': item.row === 'one-third', 'col-lg-3': item.row === 'one-fourth','float-left': item.row !== 'full'}" v-for="(item, index) in property.inputs" :key="index">
             
             <!-- Label -->
             <label v-bind:for="item.id" style="float: left; width: 100%;">
@@ -31,17 +31,17 @@
             
             <!-- Select Tag with specified value -->
             <select class="form-control" v-if="item.type === 'select_specified'" v-model="item.value" v-bind:placeholder="item.placeholder">
-              <option v-for="itemOption in item.options" v-bind:value="itemOption.value" :key="itemOption">{{itemOption.label}}</option>
+              <option v-for="(itemOption, indexOption) in item.options" v-bind:value="itemOption.value" :key="indexOption">{{itemOption.label}}</option>
             </select>
 
             <!-- Select Tag with decremental value -->
             <select class="form-control" v-if="item.type === 'select_decrement'" v-model="item.value" v-bind:placeholder="item.placeholder">
-              <option v-for="itemOption in item.options.max" v-bind:value="item.options.start - itemOption" :key="itemOption">{{(item.options.start - itemOption) + item.options.label}}</option>
+              <option v-for="(itemOption, indexOption) in item.options.max" v-bind:value="item.options.start - itemOption" :key="indexOption">{{(item.options.start - itemOption) + item.options.label}}</option>
             </select>
 
             <!-- Select Tag with incremental value -->
             <select class="form-control" v-if="item.type === 'select_increment'" v-model="item.value" v-bind:placeholder="item.placeholder">
-              <option v-for="itemOption in item.options.max" v-bind:value="itemOption" :key="itemOption">{{itemOption + item.options.label}}</option>
+              <option v-for="(itemOption, indexOption) in item.options.max" v-bind:value="itemOption" :key="indexOption">{{itemOption + item.options.label}}</option>
             </select>
 
             <!-- Textarea tag -->
