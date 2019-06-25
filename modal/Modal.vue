@@ -133,7 +133,11 @@ export default {
           }
         }else{
           if(item.value !== null || item.value !== ''){
-            this.parameter[item.variable] = item.value
+            if(item.variable === 'account_id'){
+              this.parameter[item.variable] = this.user.userID
+            }else{
+              this.parameter[item.variable] = item.value
+            }
           }
         }
       }
