@@ -104,7 +104,7 @@ export default {
         let item = inputs[i]
         if(item.required === true){
           // validate
-          if(item.type === 'select_increment' || item.type === 'select_specified'){
+          if(item.type === 'select_increment' || item.type === 'select_specified' || item.type === 'select_decrement'){
             this.parameter[item.variable] = item.value
           }else if(item.validation.type === 'text'){
             if(item.value === null){
