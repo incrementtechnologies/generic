@@ -41,7 +41,7 @@
 
             <!-- Select Tag with incremental value -->
             <select class="form-control" v-if="item.type === 'select_increment'" v-model="item.value" v-bind:placeholder="item.placeholder">
-              <option v-for="(itemOption, indexOption) in item.options.max" v-bind:value="itemOption" :key="indexOption">{{itemOption + item.options.label}}</option>
+              <option v-for="(itemOption, indexOption) in item.options.max" v-bind:value="item.options.start + itemOption" :key="indexOption">{{(item.options.start + itemOption) + item.options.label}}</option>
             </select>
 
             <!-- Textarea tag -->
@@ -77,12 +77,11 @@
 .float-left{
   float: left !important;
 }
-
 </style>
 <script>
-import ROUTER from '../../../../router'
-import AUTH from '../../../../services/auth'
-import CONFIG from '../../../../config.js'
+import ROUTER from 'src/router'
+import AUTH from 'src/services/auth'
+import CONFIG from 'src/config.js'
 export default {
   data(){
     return {
@@ -151,7 +150,7 @@ export default {
       }
     },
     submit(){
-      // $('#loading').css({display: 'block'})
+      $('#loading').css({display: 'block'})
       if(this.validate()){
         this.addParams()
         this.APIRequest(this.property.route, this.parameter).then(response => {
