@@ -33,7 +33,11 @@
     </div>
   </div>
 </template>
-<style scoped>
+<style scoped lang="scss">
+@import "~assets/style/colors.scss";
+.bg-primary{
+  background: $primary !important; 
+}
 .item{
   width: 100%;
   float: left;
