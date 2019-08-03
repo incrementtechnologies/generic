@@ -24,10 +24,12 @@
             <!-- Error input validation -->
             <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input' || item.type === 'textarea') && item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)" style="float: left; width: 100%;"><b>Opps!</b> Length must be greater than equal {{item.validation.size}}.</label>
 
+            <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input') && item.value !== null && item.validation.type === 'email' && (item.validation.flag === false)" style="float: left; width: 100%;"><b>Opps!</b> Invalid email address.</label>
+
             <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input') && item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))" style="float: left; width: 100%;"><b>Opps!</b> Minimum value is {{item.validation.size}}.</label>
 
             <!-- Input Tag -->
-            <input v-bind:type="item.inputType" class="form-control" v-model="item.value" v-if="item.type === 'input'" v-bind:placeholder="item.placeholder" v-bind:class="{'invalid-inputs': (item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))) || (item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length))}">
+            <input v-bind:type="item.inputType" class="form-control" v-model="item.value" v-if="item.type === 'input'" v-bind:placeholder="item.placeholder" v-bind:class="{'invalid-inputs': (item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))) || (item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)) || (item.value !== null && item.validation.type === 'email' && item.value.flag === false)}" @keyup="validateTyping(item)">
             
             <!-- Select Tag with specified value -->
             <select class="form-control" v-if="item.type === 'select_specified'" v-model="item.value" v-bind:placeholder="item.placeholder">
@@ -96,6 +98,17 @@ export default {
     hideModal(){
       $('#' + this.property.id).modal('hide')
     },
+    validateTyping(item){
+      switch(item.validation.type){
+        case 'email':
+          if(AUTH.validateEmail(item.value) === false){
+            item.validation.flag = false
+          }else{
+            item.validation.flag = true
+          }
+          break
+      }
+    },
     validate(){
       this.parameter = {}
       let inputs = this.property.inputs
@@ -128,6 +141,12 @@ export default {
               return false
             }else{
               this.parameter[item.variable] = parseFloat(item.value)
+            }
+          }else if(item.validation.type === 'email'){
+            if(AUTH.validateEmail(item.value) === false){
+              this.errorMessage = item.label + ' is invalid'
+            }else{
+              this.parameter[item.variable] = item.value
             }
           }
         }else{
