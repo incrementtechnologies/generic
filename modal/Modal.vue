@@ -29,7 +29,7 @@
             <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input') && item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))" style="float: left; width: 100%;"><b>Opps!</b> Minimum value is {{item.validation.size}}.</label>
 
             <!-- Input Tag -->
-            <input v-bind:type="item.inputType" class="form-control" v-model="item.value" v-if="item.type === 'input'" v-bind:placeholder="item.placeholder" v-bind:class="{'invalid-inputs': (item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))) || (item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)) || (item.value !== null && item.validation.type === 'email' && item.value.flag === false)}" @keyup="validateTyping(item)">
+            <input v-bind:type="item.inputType" class="form-control" v-model="item.value" v-if="item.type === 'input'" v-bind:placeholder="item.placeholder" v-bind:class="{'invalid-inputs': (item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))) || (item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)) || (item.value !== null && item.validation.type === 'email' && item.value.flag === false)}" @keyup="validateTyping(item)" :disabled="item.disabled === true">
             
             <!-- Select Tag with specified value -->
             <select class="form-control" v-if="item.type === 'select_specified'" v-model="item.value" v-bind:placeholder="item.placeholder">
