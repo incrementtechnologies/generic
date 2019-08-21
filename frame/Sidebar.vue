@@ -367,6 +367,7 @@
 <script>
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
+import COMMON from 'src/common.js'
 import ROUTER from 'src/router'
 export default {
   mounted(){
@@ -375,8 +376,8 @@ export default {
     return{
       user: AUTH.user,
       config: CONFIG,
-      menu: CONFIG.sidebarMenu,
-      menuOff: CONFIG.sidebarMenu,
+      menu: COMMON.sidebarMenu,
+      menuOff: COMMON.sidebarMenu,
       toggleSidebar: 'fa fa-toggle-on',
       hide: '',
       flag: false,
