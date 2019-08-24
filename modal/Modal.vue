@@ -128,7 +128,7 @@ export default {
             }else{
               this.parameter[item.variable] = item.value
             }
-          }else if(item.validation.type === 'date'){
+          }else if(item.validation.type === 'date' || item.validation.type === 'datetime-local'){
             if(item.value === null){
               this.errorMessage = item.label + ' is required'
               return false
