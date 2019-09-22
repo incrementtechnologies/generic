@@ -173,11 +173,18 @@ export default {
       if(this.validate()){
         this.addParams()
         this.APIRequest(this.property.route, this.parameter).then(response => {
-          this.hideModal()
           $('#loading').css({display: 'none'})
-          this.$parent.retrieve(this.property.sort)
+          if(response.data !== null){
+            this.errorMessage = null
+            this.hideModal()
+            this.$parent.retrieve(this.property.sort)
+          }else if(response.error !== null){
+            for(let key of Object.keys(response.error.message)){
+              this.errorMessage = response.error.message[key][0]
+              break
+            }
+          }
         })
-        $('#loading').css({display: 'none'})
       }else{
         $('#loading').css({display: 'none'})
       }
