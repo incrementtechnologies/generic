@@ -78,6 +78,16 @@
   .view-option{
     display: none;
   }
+
+  .input-group{
+    width: 100% !important;
+    min-height: 50px !important;
+  }
+
+  .btn, .form-control{
+    float: left;
+    width: 100% !important;
+  }
 }
 </style>
 <script>
