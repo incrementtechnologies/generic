@@ -3,7 +3,7 @@
     <div class="system-header">
       <a class="navbar-brand" v-on:click="redirect('dashboard')">
         <img :src="require('src/assets/img/logo_white.png')" class="logo-brand">
-        <label class="navbar-brand hide-on-mobile text-white" v-html="config.APP_NAME_HTML"></label>
+        <label class="navbar-brand hide-on-mobile text-white" v-html="common.APP_NAME_HTML"></label>
       </a>
     </div>
     <nav class="header-navbar">
@@ -394,6 +394,7 @@ body{
   float: left;
   font-weight: 550;
   color: $primary;
+  margin-top: 25px;
 }
 .dropdown-item-button{
   height: 50px;
@@ -457,6 +458,7 @@ body{
   float: left;
   height: 80px;
   text-align: center;
+  margin-top: 25px;
 }
 .profile-image-holder-header img{
   width: 80px;

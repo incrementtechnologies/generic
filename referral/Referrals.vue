@@ -1,11 +1,11 @@
 <template>
 	<div class="holder">
     <div class="alert alert-success">
-      Hi <b>{{user.username}}!</b> Invite your friends to ID Factory to get a month of free subscription based on your current plan. If you are currently on trial account you will get the <b>basic</b> subscription plan reward.
+      Hi <b>{{user.username}}!</b> Invite your friends to {{common.APP_NAME}} {{common.referral.message}}
     </div>
     <div class="invitation">
       <div class="header text-primary">
-        <b>Invite your friends to ID Factory</b>
+        <b>Invite your friends to {{common.APP_NAME}}</b>
       </div>
       <span class="alert alert-success" v-if="successMessage !== null">
         {{successMessage}}
@@ -44,7 +44,7 @@
       </table>
     </div>
     <div class="results" v-if="data === null">
-      <empty :title="'Looks like you do not have referrals!'" :action="'Invite your friends now to get a month of free subscription.'"></empty>
+      <empty :title="'Looks like you do not have referrals!'" :action="'Invite your friends now ' + common.referral.message"></empty>
     </div>
 	</div>
 </template>
@@ -96,10 +96,10 @@
   }
 </style>
 <script>
-import ROUTER from '../../../../router'
-import AUTH from '../../../../services/auth'
-import CONFIG from '../../../../config.js'
-import axios from 'axios'
+import ROUTER from 'src/router'
+import AUTH from 'src/services/auth'
+import CONFIG from 'src/config.js'
+import COMMON from 'src/common.js'
 export default {
   mounted(){
     AUTH.checkPlan()
@@ -111,9 +111,10 @@ export default {
       config: CONFIG,
       data: null,
       email: null,
-      message: 'I\'d like to invite you on ID Factory. They help me ease on providing ID\'s to my employees and It\'s very easy to use. Register now!',
+      message: 'I\'d like to invite you on ' + COMMON.APP_NAME + COMMON.referral.emailMessage,
       successMessage: null,
-      errorMessage: null
+      errorMessage: null,
+      common: COMMON
     }
   },
   components: {
@@ -153,7 +154,7 @@ export default {
           if(response.data > 0 && response.data !== null){
             // success message here
             this.email = null
-            this.message = 'I\'d like to invite you on ID Factory. They help me ease on providing ID\'s to my employees and It\'s very easy to use. Register now!'
+            this.message = 'I\'d like to invite you on ' + COMMON.APP_NAME + COMMON.referral.emailMessage
             this.successMessage = 'Invitation Sent!'
             this.errorMessage = null
             this.retrieve()
