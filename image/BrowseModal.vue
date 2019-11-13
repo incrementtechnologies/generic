@@ -25,7 +25,7 @@
             </span>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-danger" @click="cancel()">Cancel</button>
+            <button class="btn btn-danger" @click="close()">Cancel</button>
             <button class="btn btn-primary" @click="apply()">Apply</button>
           </div>
         </div>
@@ -128,9 +128,9 @@
 }
 </style>
 <script>
-import ROUTER from '../../../../router'
-import AUTH from '../../../../services/auth'
-import CONFIG from '../../../../config.js'
+import ROUTER from 'src/router'
+import AUTH from 'src/services/auth'
+import CONFIG from 'src/config.js'
 import axios from 'axios'
 export default {
   mounted(){
