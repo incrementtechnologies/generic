@@ -79,7 +79,7 @@
           </span>
         </div>     
  -->
-        <div class="dropdown" v-if="!common.header.indexOf('messenger') && user.messages !== null"> 
+        <div class="dropdown" v-if="user.messages.data !== null"> 
             <span class="nav-item" data-toggle="dropdown" id="notifications" aria-haspopup="true" aria-expanded="false">
               <span>
                 <i class="fas fa-envelope" style="font-size: 22px;margin-top: 2px;"></i>
@@ -103,22 +103,22 @@
         </div>
 
 
-        <div class="dropdown" v-if="!common.header.indexOf('notification') && user.notifications.data !== null"> 
-            <span class="nav-item" v-bind:class="{'active-menu': notifFlag === true}" data-toggle="dropdown" id="notifications" aria-haspopup="true" aria-expanded="false" v-on:click="makeActive('notif'), updateNotif(user.notifications.data[0])" v-bind:onkeypress="makeActive('')" v-if="user.notifications.data !== null">
+        <div class="dropdown" v-if="user.notifications.data !== null"> 
+            <span class="nav-item" v-bind:class="{'active-menu': notifFlag === true}" data-toggle="dropdown" id="notifications" aria-haspopup="true" aria-expanded="false" v-on:click="makeActive('notif')" v-bind:onkeypress="makeActive('')" v-if="user.notifications.data !== null">
               <span>
                 <i class="fa fa-bell"></i>
-                <label class="notifications" v-if="parseInt(user.notifications.current) > 0">{{user.notifications.current}}</label>
+                <label class="notifications badge-danger" v-if="parseInt(user.notifications.current) > 0">{{user.notifications.current}}</label>
               </span>
               <span class="dropdown-menu dropdown-menu-right dropdown-menu-notification" aria-labelledby="notifications">
                 <span class="notification-header">
                   Notifications
                 </span>
-                <span class="notification-item" v-for="item, index in user.notifications.data" v-if="user.notifications.data !== null && item.status !== 'ac_viewed'" v-on:click="executeNotifItem(item)">
+                <span class="notification-item" v-for="item, index in user.notifications.data" v-if="user.notifications.data !== null && item.status !== 'ac_viewed'" v-on:click="updateNotification(item)">
                   <span class="notification-title">
                     {{item.title}}
                   </span>
                   <span class="notification-description">{{item.description}}</span>
-                  <span class="notification-date">Posted on {{item.created_at}}</span>
+                  <span class="notification-date">Posted on {{item.created_at_human}}</span>
                 </span>
               </span>
             </span>
@@ -712,10 +712,6 @@ import CONFIG from 'src/config.js'
 import COMMON from 'src/common.js'
 export default {
   mounted(){
-    this.retrieve({
-      column: 'created_at',
-      value: 'desc'
-    })
   },
   data(){
     return{
@@ -766,83 +762,16 @@ export default {
     },
     display(){
     },
-    setSemester(index){
-      let semesters = this.user.semesters[index]
-      let parameter = {
-        'id': this.user.userID,
-        'active_semester': semesters.id
-      }
-      this.APIRequest('accounts/update_active_semester', parameter).then(response => {
-        if(response.data === true){
-          ROUTER.go('/')
-        }
-      })
-    },
-    executeNotifItem(item){
-      if(item.payload === 'redirect'){
-        this.redirect('/' + item.url)
-      }else if(item.payload === 'api_call'){
-        let parameter = {
-          'condition': [{
-            'clause': '=',
-            'column': 'id',
-            'value': this.user.userID
-          }]
-        }
-        this.APIRequest(item.url, parameter).then(response => {
-          // alert here
-        })
-      }
-    },
-    updateNotif(item){
-      if(parseInt(this.user.notifications.current) > 0){
-        if(item.course_id !== null && item.account_id === null){
-          let parameter = {
-            'account_id': this.user.userID,
-            'status': 'ac_viewed'
-          }
-          this.APIRequest('notifications/create', parameter).then(response => {
-            if(response.data > 0){
-              AUTH.retrieveNotifications(this.user.userID)
-            }
-          })
-        }else{
-          let parameter = {
-            'id': item.id,
-            'status': 'viewed'
-          }
-          this.APIRequest('notifications/update', parameter).then(response => {
-            if(response.data === true){
-              AUTH.retrieveNotifications(this.user.userID)
-            }
-          })
-        }
-      }
-    },
-    redirectGuide(){
-      if(this.user.type === 'STUDENT'){
-        this.redirect('/guide/fs')
-      }else if(this.user.type === 'TEACHER'){
-        this.redirect('/guide/ft')
-      }
-    },
     openModal(id){
       $(id).modal('show')
     },
-    retrieve(sort){
+    updateNotification(item){
       let parameter = {
-        account_id: this.user.userID,
-        limit: 10,
-        sort: (sort !== null) ? sort : this.sort
+        id: item.id
       }
-      $('#loading').css({display: 'none'})
-      this.APIRequest('notifications/retrieve', parameter).then(response => {
-        $('#loading').css({display: 'none'})
-        if(response !== null){
-          this.data = response.data
-        }else{
-          this.data = null
-        }
+      this.APIRequest('notifications/update', parameter).then(response => {
+        AUTH.retrieveNotifications(this.user.userID)
+        this.redirect(item.route)
       })
     }
   }
