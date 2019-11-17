@@ -114,7 +114,7 @@ export default {
       let inputs = this.property.inputs
       for (var i = 0; i < inputs.length; i++) {
         let item = inputs[i]
-        if(item.required === true){
+        if(item.required === true || (item.required === false && (item.value !== null || item.value !== ''))){
           // validate
           if(item.type === 'select_increment' || item.type === 'select_specified' || item.type === 'select_decrement'){
             this.parameter[item.variable] = item.value
