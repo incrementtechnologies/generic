@@ -34,13 +34,9 @@
               <span class="dropdown-item dropdown-item-menu-title">
                 <label>Personal</label>
               </span>
-              <span class="dropdown-item" v-on:click="redirect('/profile')">
-                <i class="fa fa-cog"></i>
-                <label>My Profile</label>
-              </span>
-              <span class="dropdown-item" v-on:click="redirect('/referrals')">
-                <i class="fa fa-users"></i>
-                <label>Invite Friends</label>
+              <span class="dropdown-item" v-on:click="redirect(item.route)" v-for="(item, index) in common.profileMenu" :key="index">
+                <i v-bind:class="item.icon"></i>
+                <label>{{item.title}}</label>
               </span>
               <span class="dropdown-item dropdown-item-menu-title">
                 <label>Documents</label>
@@ -113,7 +109,7 @@
                 <span class="notification-header">
                   Notifications
                 </span>
-                <span class="notification-item" v-for="item, index in user.notifications.data" v-if="user.notifications.data !== null && item.status !== 'ac_viewed'" v-on:click="updateNotification(item)">
+                <span class="notification-item" v-for="item, index in user.notifications.data" v-if="user.notifications.data !== null && item.status !== 'ac_viewed'" v-on:click="updateNotification(item)" v-bind:class="{'notification-item-unread': index < user.notifications.current}">
                   <span class="notification-title">
                     {{item.title}}
                   </span>
@@ -537,6 +533,10 @@ body{
 
 .notification-item:hover{
   cursor: pointer;
+  background: #efefef;
+}
+
+.notification-item-unread{
   background: #efefef;
 }
 
