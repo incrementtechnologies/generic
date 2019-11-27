@@ -712,6 +712,9 @@ import CONFIG from 'src/config.js'
 import COMMON from 'src/common.js'
 export default {
   mounted(){
+    if(CONFIG.PUSHER_KEY !== null || typeof CONFIG.PUSHER_KEY !== undefined){
+      this.initPusher()
+    }
   },
   data(){
     return{
@@ -761,6 +764,12 @@ export default {
       AUTH.redirect(parameter)
     },
     display(){
+    },
+    initPusher(){
+      var channel = this.$pusher.subscribe(COMMON.pusher.channel)
+      channel.bind(COMMON.pusher.event, (response) => {
+        AUTH.addNotification(response)
+      })
     },
     openModal(id){
       $(id).modal('show')
