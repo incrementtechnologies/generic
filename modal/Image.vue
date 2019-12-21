@@ -78,10 +78,10 @@ export default {
   },
   data(){
     return {
-      user: AUTH.user
+      user: AUTH.user,
+      src: null
     }
   },
-  props: ['src'],
   methods: {
     redirect(path){
       ROUTER.push(path)
