@@ -767,8 +767,16 @@ export default {
     },
     initPusher(){
       var channel = this.$pusher.subscribe(COMMON.pusher.channel)
-      channel.bind(COMMON.pusher.event, (response) => {
+      channel.bind(COMMON.pusher.notifications, (response) => {
         AUTH.addNotification(response)
+      })
+      channel.bind(COMMON.pusher.messages, response => {
+        AUTH.addMessage(response)
+      })
+      channel.bind(COMMON.pusher.validation, response => {
+        if(parseInt(response.messenger_group_id) === AUTH.messenger.messengerGroupId && parseInt(response.account_id) !== this.user.userID){
+          ROUTER.go('/')
+        }
       })
     },
     openModal(id){
