@@ -4,7 +4,7 @@
       <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
           <div class="modal-header bg-primary">
-            <h5 class="modal-title" id="exampleModalLabel">Quick Tutorial</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Quick  Tutorial</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="close()">
               <span aria-hidden="true" class="text-white">&times;</span>
             </button>
@@ -28,7 +28,9 @@
     </div>
   </div>
 </template>
-<style scoped>
+<style scoped lang="scss">
+@import "~assets/style/colors.scss";
+
 .guide-row{
   width: 100%;
   float: left;
@@ -41,6 +43,10 @@
 .modal-footer{
   display: unset;
 }
+.bg-primary{
+  background-color: $primary !important;
+}
+
 </style>
 <script>
 import ROUTER from 'src/router'
