@@ -45,7 +45,6 @@
 <script>
 import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
-import CONFIG from 'src/config.js'
 import COMMON from 'src/common.js'
 import axios from 'axios'
 export default {
@@ -55,7 +54,6 @@ export default {
   data(){
     return {
       user: AUTH.user,
-      config: CONFIG,
       activeIndex: 0,
       common: COMMON
     }
@@ -84,7 +82,7 @@ export default {
       }
     },
     next(){
-      if(this.activeIndex < this.config.GUIDE.length){
+      if(this.activeIndex < this.common.GUIDE.length){
         this.activeIndex++
       }
     },
