@@ -116,7 +116,7 @@
 .profile-image-holder img{
   width: 80px;
   height: 80px;
-  border-radius: 5px;
+  border-radius: 50%;
 }
 
 .profile-photo .profile-icon{

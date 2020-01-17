@@ -459,7 +459,7 @@ body{
 .profile-image-holder-header img{
   width: 80px;
   height: 80px;
-  border-radius: 5px;
+  border-radius: 50%;
 }
 
 .profile-photo-header i{
@@ -710,11 +710,11 @@ import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import COMMON from 'src/common.js'
+import Echo from 'laravel-echo'
+import Vue from 'vue'
 export default {
   mounted(){
-    if(CONFIG.PUSHER_KEY !== null || typeof CONFIG.PUSHER_KEY !== undefined){
-      this.initPusher()
-    }
+    this.initPusher()
   },
   data(){
     return{
@@ -766,18 +766,51 @@ export default {
     display(){
     },
     initPusher(){
-      var channel = this.$pusher.subscribe(COMMON.pusher.channel)
-      channel.bind(COMMON.pusher.notifications, (response) => {
-        AUTH.addNotification(response)
-      })
-      channel.bind(COMMON.pusher.messages, response => {
-        AUTH.addMessage(response)
-      })
-      channel.bind(COMMON.pusher.validation, response => {
-        if(parseInt(response.messenger_group_id) === AUTH.messenger.messengerGroupId && parseInt(response.account_id) !== this.user.userID){
-          ROUTER.go('/')
-        }
-      })
+      if(CONFIG.PUSHER.flag === 'self'){
+        window.Echo = new Echo({
+          broadcaster: 'pusher',
+          key: CONFIG.PUSHER.key,
+          wsHost: CONFIG.PUSHER.wsHost,
+          wsPort: CONFIG.PUSHER.wsPort,
+          disableStats: true,
+          enabledTransports: ['ws', 'wss']
+        })
+        window.Echo.channel('PAYHIRAM')
+        .listen('Call', e => {
+          console.log(e)
+        })
+        .listen(COMMON.pusher.notifications, e => {
+          console.log(e)
+          AUTH.addNotification(e.data)
+        })
+        .listen(COMMON.pusher.messages, e => {
+          AUTH.addMessage(e.data)
+        })
+        .listen(COMMON.pusher.validation, e => {
+          if(parseInt(e.data.id) === AUTH.messenger.messengerGroupId){
+            console.log('group', e.data)
+            AUTH.messenger.group = e.data
+            AUTH.messenger.messages = e.data.messages
+            AUTH.playNotificationSound()
+          }
+        })
+      }else{
+        var channel = this.$pusher.subscribe(COMMON.pusher.channel)
+        channel.bind(COMMON.pusher.notifications, (response) => {
+          AUTH.addNotification(response)
+        })
+        channel.bind(COMMON.pusher.messages, response => {
+          AUTH.addMessage(response)
+        })
+        channel.bind(COMMON.pusher.validation, response => {
+          if(parseInt(response.id) === AUTH.messenger.messengerGroupId){
+            console.log('group', response)
+            AUTH.messenger.group = response
+            AUTH.messenger.messages = response.messages
+            AUTH.playNotificationSound()
+          }
+        })
+      }
     },
     openModal(id){
       $(id).modal('show')
