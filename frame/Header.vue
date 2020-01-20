@@ -766,7 +766,14 @@ export default {
     display(){
     },
     initPusher(){
-      if(CONFIG.PUSHER.flag === 'self'){
+      if(CONFIG.PUSHER.flag === 'pusher'){
+        window.Echo = new Echo({
+          broadcaster: 'pusher',
+          key: CONFIG.PUSHER.key,
+          cluster: 'ap1',
+          encrypted: true
+        })
+      }else{
         window.Echo = new Echo({
           broadcaster: 'pusher',
           key: CONFIG.PUSHER.key,
@@ -775,42 +782,51 @@ export default {
           disableStats: true,
           enabledTransports: ['ws', 'wss']
         })
-        window.Echo.channel('PAYHIRAM')
-        .listen('Call', e => {
-          console.log(e)
-        })
-        .listen(COMMON.pusher.notifications, e => {
-          console.log(e)
-          AUTH.addNotification(e.data)
-        })
-        .listen(COMMON.pusher.messages, e => {
-          AUTH.addMessage(e.data)
-        })
-        .listen(COMMON.pusher.validation, e => {
-          if(parseInt(e.data.id) === AUTH.messenger.messengerGroupId){
-            console.log('group', e.data)
-            AUTH.messenger.group = e.data
-            AUTH.messenger.messages = e.data.messages
-            AUTH.playNotificationSound()
-          }
-        })
-      }else{
-        var channel = this.$pusher.subscribe(COMMON.pusher.channel)
-        channel.bind(COMMON.pusher.notifications, (response) => {
-          AUTH.addNotification(response)
-        })
-        channel.bind(COMMON.pusher.messages, response => {
-          AUTH.addMessage(response)
-        })
-        channel.bind(COMMON.pusher.validation, response => {
-          if(parseInt(response.id) === AUTH.messenger.messengerGroupId){
-            console.log('group', response)
-            AUTH.messenger.group = response
-            AUTH.messenger.messages = response.messages
-            AUTH.playNotificationSound()
-          }
-        })
       }
+      window.Echo.channel(COMMON.pusher.channel)
+      .listen('Call', e => {
+        console.log(e)
+      })
+      .listen(COMMON.pusher.notifications, e => {
+        console.log(e)
+        AUTH.addNotification(e.data)
+      })
+      .listen(COMMON.pusher.messages, e => {
+        AUTH.addMessage(e.data)
+      })
+      .listen(COMMON.pusher.messageGroup, e => {
+        if(parseInt(e.data.id) === AUTH.messenger.messengerGroupId){
+          console.log('group', e.data)
+          AUTH.messenger.group.status = parseInt(e.data.status)
+          AUTH.messenger.group.validations = e.data.validations
+          AUTH.messenger.group.rating = e.data.rating
+          AUTH.messenger.group.created_at_human = e.data.created_at_human
+          AUTH.playNotificationSound()
+          if(e.data.message_update === true){
+            // update messages
+            this.retrieveMessages(parseInt(e.data.id))
+          }
+        }
+      })
+    },
+    retrieveMessages(id){
+      let parameter = {
+        condition: [{
+          value: id,
+          column: 'messenger_group_id',
+          clause: '='
+        }],
+        sort: {
+          'created_at': 'ASC'
+        }
+      }
+      this.APIRequest('messenger_messages/retrieve', parameter).done(response => {
+        if(response.data.length > 0){
+          AUTH.messenger.messages = response.data
+        }else{
+          AUTH.messenger.messages = null
+        }
+      })
     },
     openModal(id){
       $(id).modal('show')
