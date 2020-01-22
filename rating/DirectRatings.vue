@@ -1,12 +1,12 @@
 <template>
   <span v-if="ratings !== null">
-    <i v-bind:class="{'far': ratings.stars === 0 || i > ratings.stars, 'fas text-warning': i <= ratings.stars}" class="fa-star" v-for="i in 5"></i> <label v-if="parseInt(ratings.size) > 10">({{ratings.size}})</label>
+    <i v-bind:class="{'far': ratings.stars === 0 || i > ratings.stars, 'fas text-warning': i <= ratings.stars}" class="fa-star" v-for="i in 5"></i> <label v-if="ratings.size > 50">({{ratings.avg.toFixed(1)}})</label>
   </span>
 </template>
 <script>
-import ROUTER from '../../../../router'
-import AUTH from '../../../../services/auth'
-import CONFIG from '../../../../config.js'
+import ROUTER from 'src/router'
+import AUTH from 'src/services/auth'
+import CONFIG from 'src/config.js'
 import axios from 'axios'
 export default {
   mounted(){
