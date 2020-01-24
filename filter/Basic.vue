@@ -11,7 +11,7 @@
           {{item.title}}
         </option>
       </select>
-      <input type="text" class="form-control" v-model="searchValue" @keypress="keypressHandler" :placeholder="'Search ' + '...'">
+      <input :type="(activeSort !== null && (typeof activeSort[sortValue].input_type !== undefined && activeSort[sortValue].input_type !== 'undefined')) ? activeSort[sortValue].input_type : 'text'" class="form-control" v-model="searchValue" @keypress="keypressHandler" :placeholder="'Search ' + '...'">
       <div class="view-container">
         <div class="view-option">
           <i :class="`fa fa-${grid[toggleStyle]}`" @click="changeView()" aria-hidden="true"></i>
