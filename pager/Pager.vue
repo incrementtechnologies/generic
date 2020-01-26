@@ -1,5 +1,5 @@
 <template>
-  <div class="holder">
+  <div>
     <ul class="pagination pull-right">
       <li class="page-item" v-if="active > 1"><span class="page-link" @click="onPrevious()">Previous</span></li>
       <li class="page-item" v-if="active >= 2"><span class="page-link" @click="onSelectedPage(active - 1)">{{active - 1}}</span></li>
@@ -7,7 +7,7 @@
       <li class="page-item" v-if="active < pages"><span class="page-link" @click="onSelectedPage(active + 1)">{{active + 1}}</span></li>
       <li class="page-item" v-if="active < pages"><span class="page-link" @click="onNext()">Next</span></li>
     </ul>
-    <select class="btn btn-default" v-model="localLimit"  @change="changeLimit">
+    <select class="btn btn-default pull-right" style="margin-right: 5px;" v-model="localLimit"  @change="changeLimit">
       <option class="dropdown-title" v-for="item in 5" :value="(item * 5)" :key="item">
         {{parseInt(item * 5)}}
       </option>
@@ -34,6 +34,7 @@
   padding-bottom: 0px !important;
   padding-left: 20px !important;
   padding-right: 20px !important;
+  border: 0px !important;
 }
 
 .bg-primary{
