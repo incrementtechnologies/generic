@@ -86,7 +86,7 @@
                   Recent
                   <label class="badge badge-danger">{{user.messages.totalUnreadMessages}}</label>
                 </span>
-                <span class="notification-item" v-for="item, index in user.messages.data" v-if="user.messages.data !== null" @click="redirect('/' + common.messagesHeader.path + '/' + item.payload)">
+                <span class="notification-item" v-for="item, index in user.messages.data" v-if="user.messages.data !== null" @click="redirect('/' + common.messagesHeader.path + '/' + item.payload, item)">
                   <span class="notification-title">
                     {{item.title.username}}
                     <label class="badge badge-danger" style="margin-left: 5px;" v-if="parseInt(item.total_unread_messages) > 0">{{item.total_unread_messages}}</label>
@@ -760,8 +760,12 @@ export default {
     logOut(){
       AUTH.deaunthenticate()
     },
-    redirect(parameter){
-      AUTH.redirect(parameter)
+    redirect(parameter, item = null){
+      if(item === null){
+        AUTH.redirect(parameter)
+      }else{
+        this.updateMessages(parameter, item)
+      }
     },
     display(){
     },
@@ -839,6 +843,19 @@ export default {
         AUTH.retrieveNotifications(this.user.userID)
         this.redirect(item.route)
       })
+    },
+    updateMessages(params, item){
+      if(item.total_unread_messages > 0){
+        let parameter = {
+          messenger_group_id: item.messenger_group_id
+        }
+        this.APIRequest('messenger_messages/update_by_status', parameter).then(response => {
+          AUTH.redirect(params)
+        })
+        item.total_unread_messages = 0
+      }else{
+        AUTH.redirect(params)
+      }
     }
   }
 }
