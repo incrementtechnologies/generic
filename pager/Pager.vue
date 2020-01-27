@@ -15,6 +15,7 @@
   </div>
 </template>
 <style scoped lang="scss">
+
 @import "~assets/style/colors.scss";
 .holder{
   width: 100%;
@@ -29,12 +30,18 @@
 }
 
 .page-link{
+
+  border: 1px solid #ccc;
+
+}
+
+.page-link{
   line-height: 40px !important;
   padding-top: 0px !important;
   padding-bottom: 0px !important;
   padding-left: 20px !important;
   padding-right: 20px !important;
-  border: 0px !important;
+
 }
 
 .bg-primary{
