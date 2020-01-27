@@ -30,18 +30,11 @@
 }
 
 .page-link{
-
-  border: 1px solid #ccc;
-
-}
-
-.page-link{
   line-height: 40px !important;
   padding-top: 0px !important;
   padding-bottom: 0px !important;
   padding-left: 20px !important;
   padding-right: 20px !important;
-
 }
 
 .bg-primary{
