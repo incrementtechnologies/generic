@@ -41,14 +41,17 @@
               <span class="dropdown-item dropdown-item-menu-title">
                 <label>Documents</label>
               </span>
+              <!--GUIDE-->
               <span class="dropdown-item" @click="openModal('#guideModal')">
                 <i class="far fa-question-circle"></i>
                 <label>Guide</label>
               </span>
+              <!--PRIVACY POLICY-->
               <span class="dropdown-item" @click="openModal('#privacyModal')">
                 <i class="fas fa-shield-alt"></i>
                 <label>Privacy Policy</label>
               </span>            
+              <!--TERMS AND CONDITIONS-->
               <span class="dropdown-item" @click="openModal('#termsAndConditionsModal')">
                 <i class="fa fa-handshake-o"></i>
                 <label>Terms and Conditions</label>
@@ -833,6 +836,9 @@ export default {
       })
     },
     openModal(id){
+      $('#guideModal').modal('hide')
+      $('#privacyModal').modal('hide')
+      $('#termsAndConditionsModal').modal('hide')
       $(id).modal('show')
     },
     updateNotification(item){
