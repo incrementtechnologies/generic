@@ -390,6 +390,25 @@ export default {
       menuFlag: true
     }
   },
+  watch: {
+    '$route' (to, from) {
+      let index = null
+      for (var i = 0; i < COMMON.sidebarMenu.length; i++) {
+        let item = COMMON.sidebarMenu[i]
+        if(to.name === item.path){
+          index = i
+          break
+        }
+      }
+      if(index !== null){
+        this.setActive(index)
+      }else{
+        if(this.prevMenu !== null){
+          this.menu[this.prevMenu].flag = false
+        }
+      }
+    }
+  },
   methods: {
     setActive(index){
       if(this.prevMenu !== index){
