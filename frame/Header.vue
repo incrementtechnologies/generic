@@ -839,7 +839,9 @@ export default {
       $('#guideModal').modal('hide')
       $('#privacyModal').modal('hide')
       $('#termsAndConditionsModal').modal('hide')
-      $(id).modal('show')
+      setTimeout(() => {
+        $(id).modal('show')
+      }, 100)
     },
     updateNotification(item){
       let parameter = {
