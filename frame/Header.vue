@@ -649,10 +649,10 @@ body{
       display: block;
     }
     .left-menu-icons{
-      width: 60% !important;
+      width: 30% !important;
     }
     .right-menu-icons{
-      width: 40% !important;
+      width: 70% !important;
     }
     .nav-item{
       width: 10%;
@@ -689,11 +689,11 @@ body{
     }
 
     .left-menu-icons{
-      width: 40% !important;
+      width: 20% !important;
     }
 
     .right-menu-icons{
-      width: 60% !important;
+      width: 80% !important;
     }
 
     .hide-on-mobile{
