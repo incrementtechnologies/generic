@@ -263,7 +263,7 @@
 @media (max-width: 991px){
   .main-sidebar{
     width: 100%;
-    position: absolute;
+    position: fixed;
     top:0;
     left: 0;
     z-index: 30;
@@ -279,7 +279,7 @@
   }
   .main-sidebar ul{
     background: #fff;
-    width: 90%;
+    width: 60%;
     min-height: 400px;
   }
    .sm-title{
@@ -321,7 +321,7 @@
   }
   .main-sidebar{
     width: 90%;
-    position: absolute;
+    position: fixed;
     top:0;
     left: 0;
     z-index: 10;
