@@ -112,7 +112,7 @@
                 <span class="notification-header">
                   Notifications
                 </span>
-                <span class="notification-item" v-for="item, index in user.notifications.data" v-if="user.notifications.data !== null && item.status !== 'ac_viewed'" v-on:click="updateNotification(item)" v-bind:class="{'notification-item-unread': index < user.notifications.current}">
+                <span class="notification-item" v-for="item, index in user.notifications.data" v-if="user.notifications.data !== null && item.status !== 'ac_viewed'" v-on:click="updateNotification(item, user.notifications.current, index)" v-bind:class="{'notification-item-unread': index < user.notifications.current}">
                   <span class="notification-title">
                     {{item.title}}
                   </span>
@@ -843,14 +843,18 @@ export default {
         $(id).modal('show')
       }, 100)
     },
-    updateNotification(item){
-      let parameter = {
-        id: item.id
-      }
-      this.APIRequest('notifications/update', parameter).then(response => {
-        AUTH.retrieveNotifications(this.user.userID)
+    updateNotification(item, current, index){
+      if(parseInt(current) > index){
+        let parameter = {
+          id: item.id
+        }
+        this.APIRequest('notifications/update', parameter).then(response => {
+          AUTH.retrieveNotifications(this.user.userID)
+          this.redirect(item.route)
+        })
+      }else{
         this.redirect(item.route)
-      })
+      }
     },
     updateMessages(params, item){
       if(item.total_unread_messages > 0){

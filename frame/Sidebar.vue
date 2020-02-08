@@ -265,7 +265,7 @@
 @media (max-width: 991px){
   .main-sidebar{
     width: 100%;
-    position: absolute;
+    position: fixed;
     top:0;
     left: 0;
     z-index: 30;
@@ -281,7 +281,7 @@
   }
   .main-sidebar ul{
     background: #fff;
-    width: 90%;
+    width: 60%;
     min-height: 400px;
   }
    .sm-title{
@@ -323,7 +323,7 @@
   }
   .main-sidebar{
     width: 90%;
-    position: absolute;
+    position: fixed;
     top:0;
     left: 0;
     z-index: 10;
@@ -403,7 +403,7 @@ export default {
         }
       }
       if(index !== null){
-        this.setActive(index)
+        this.setActiveOnWatch(index, to.path)
       }else{
         if(this.prevMenu !== null){
           this.menu[this.prevMenu].flag = false
@@ -412,7 +412,7 @@ export default {
     }
   },
   methods: {
-    setActive(index){
+    setActive(index, code = null){
       if(this.prevMenu !== index){
         this.menu[this.prevMenu].flag = false
         this.menu[index].flag = true
@@ -423,6 +423,20 @@ export default {
       }
       if(this.menu[index].subMenu === null){
         ROUTER.push('/' + this.menu[this.prevMenu].path)
+        $('.navbar-collapse').collapse('hide')
+      }
+    },
+    setActiveOnWatch(index, path){
+      if(this.prevMenu !== index){
+        this.menu[this.prevMenu].flag = false
+        this.menu[index].flag = true
+        if(this.menu[this.prevMenu].subMenu !== null){
+          this.menu[this.prevMenu].subMenu[this.subPrevMenu].flag = false
+        }
+        this.prevMenu = index
+      }
+      if(this.menu[index].subMenu === null){
+        ROUTER.push(path)
         $('.navbar-collapse').collapse('hide')
       }
     },
