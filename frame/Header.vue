@@ -205,7 +205,6 @@ body{
     background: $darkPrimary;
     text-align: center;
     position: fixed;
-    z-index: 6000;
   }
   
   .header-navbar{
@@ -836,6 +835,7 @@ export default {
       })
     },
     openModal(id){
+      $('#profileModal').modal('hide')
       $('#guideModal').modal('hide')
       $('#privacyModal').modal('hide')
       $('#termsAndConditionsModal').modal('hide')
