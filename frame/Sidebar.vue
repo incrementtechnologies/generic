@@ -12,7 +12,7 @@
                   <i class="fas fa-check text-primary profile-status" v-if="user.status === 'VERIFIED'"></i>
                   Hi {{user.username}}!
                 </span>
-                <i v-bind:class="toggleSidebar + ' pull-left'" aria-hidden="true" v-on:click="changeToggleSidebarIcon()" id="toggleIcon"></i>
+                <i v-bind:class="toggleSidebar + ' pull-right'" aria-hidden="true" v-on:click="changeToggleSidebarIcon()" id="toggleIcon"></i>
             </li>
             <li v-for="(item, index) in menu" :key="index" v-bind:class="{ 'active-menu': item.flag === true }" v-on:click="setActive(index)" v-if="(((item.accountType === user.type || item.accountType === 'ALL') && user.type !== 'ADMIN') || user.type === 'ADMIN') && (item.accountStatus === 'ALL' || (user.subAccount === null || (user.subAccount !== null && user.subAccount.status === item.accountStatus))) && menuFlag === true" class="menu-holder">
               <i v-bind:class="item.icon" class=" visible"></i> 
@@ -75,8 +75,6 @@
   list-style: none;
   padding: 0px;
   margin: 0px;
-  position: fixed; /*-- added --*/
-  width: 275px; /*-- added --*/
 }
 
 .sidebar-menu .header{
@@ -193,7 +191,7 @@
 
 .menu-holder-hidden i{
   font-size: 20px;
-  padding-right: 5px;
+  padding-right: 5px; 
 }
 
 /*---------------------------------------------------------          
@@ -209,6 +207,7 @@
   }
   .sidebar-collapse{
     display: block;
+    position: fixed; /*- fixed sidebar -*/
   }
   .sidebar-menu .header span{
     display: block;
@@ -216,16 +215,17 @@
   .content-holder{
     width: 81%;
     margin: 60px 0px 0px 0px;
-    float: left;
+    float: right; /*- changed float left to right -*/
   }
   /*  Change with Menu Toggled */
   .main-sidebar.hidden{
     width: 5%;
+    position: fixed; /*- fixed sidebar -*/
   }
   .content-holder.hidden{
     width: 94%;
     margin: 60px 0px 0px 1%;
-    float: left;
+    float: right; /*- changed float from left to right -*/
   }
 }
 
@@ -238,13 +238,14 @@
   .content-holder{
     width: 72%;
     margin: 60px 0px 0px 0px;
-    float: left;
+    float: right; /*- changed float from left to right -*/
   }
   .main-sidebar.active{
     padding-left:15%;
   }
   .sidebar-collapse{
     display: block;
+    position: fixed; /*- fixed sidebar -*/
   }
   .sidebar-menu .header span{
     display: block;
@@ -253,11 +254,12 @@
   /*  Change with Menu Toggled */
   .main-sidebar.hidden{
     width: 5%;
+    position: fixed; /*- fixed sidebar -*/
   }
   .content-holder.hidden{
     width: 94%;
     margin: 60px 0px 0px 1%;
-    float: left;
+    float: right; /*- changed float from left to right -*/
   }
 }
 
