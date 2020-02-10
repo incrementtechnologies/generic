@@ -273,6 +273,7 @@
     z-index: 30;
     background-color: rgba(0,0,0,0.5);
     margin-top: 50px;
+    height: 100vh;
   }
   .content-holder{
     min-height: 10px;
@@ -285,6 +286,7 @@
     background: #fff;
     width: 60%;
     min-height: 400px;
+    height: 100vh;
   }
    .sm-title{
     text-align: center;
@@ -331,6 +333,11 @@
     z-index: 10;
     background: #fff;
     margin-top: 100px;
+    height: 100vh;
+  }
+
+  .main-sidebar ul{
+    height: 100vh;
   }
 
   .content-holder{

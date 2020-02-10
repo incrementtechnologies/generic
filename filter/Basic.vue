@@ -53,6 +53,9 @@
   border-top-right-radius: 0px !important;
   border-bottom-right-radius: 0px !important;
 }
+.dropdown {
+  z-index: -1 !important;
+}
 @media (max-width: 650px){
   .dropdown {
       width: 20%;
