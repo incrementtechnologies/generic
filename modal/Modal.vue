@@ -13,7 +13,7 @@
               <label><b>Opps! </b>{{errorMessage}}</label>
           </span>
           <br v-if="errorMessage !== null">
-          <div class="form-group" v-bind:class="{'col-lg-6': item.row === 'half', 'col-lg-4': item.row === 'one-third', 'col-lg-3': item.row === 'one-fourth','float-left': item.row !== 'full'}" v-for="(item, index) in property.inputs" :key="index">
+          <div class="form-group" v-bind:class="(item.row !== 'full' ? item.row + ' float-left' : '')" v-for="(item, index) in property.inputs" :key="index">
             
             <!-- Label -->
             <label v-bind:for="item.id" style="float: left; width: 100%;">
@@ -32,17 +32,17 @@
             <input v-bind:type="item.inputType" class="form-control" v-model="item.value" v-if="item.type === 'input'" v-bind:placeholder="item.placeholder" v-bind:class="{'invalid-inputs': (item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))) || (item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)) || (item.value !== null && item.validation.type === 'email' && item.value.flag === false)}" @keyup="validateTyping(item)" :disabled="item.disabled === true">
             
             <!-- Select Tag with specified value -->
-            <select class="form-control" v-if="item.type === 'select_specified'" v-model="item.value" v-bind:placeholder="item.placeholder">
+            <select class="form-control form-control-custom" v-if="item.type === 'select_specified'" v-model="item.value" v-bind:placeholder="item.placeholder">
               <option v-for="(itemOption, indexOption) in item.options" v-bind:value="itemOption.value" :key="indexOption">{{itemOption.label}}</option>
             </select>
 
             <!-- Select Tag with decremental value -->
-            <select class="form-control" v-if="item.type === 'select_decrement'" v-model="item.value" v-bind:placeholder="item.placeholder">
+            <select class="form-control form-control-custom" v-if="item.type === 'select_decrement'" v-model="item.value" v-bind:placeholder="item.placeholder">
               <option v-for="(itemOption, indexOption) in item.options.max" v-bind:value="item.options.start - itemOption" :key="indexOption">{{(item.options.start - itemOption) + item.options.label}}</option>
             </select>
 
             <!-- Select Tag with incremental value -->
-            <select class="form-control" v-if="item.type === 'select_increment'" v-model="item.value" v-bind:placeholder="item.placeholder">
+            <select class="form-control form-control-custom" v-if="item.type === 'select_increment'" v-model="item.value" v-bind:placeholder="item.placeholder">
               <option v-for="(itemOption, indexOption) in item.options.max" v-bind:value="item.options.start + itemOption" :key="indexOption">{{(item.options.start + itemOption) + item.options.label}}</option>
             </select>
 
@@ -62,8 +62,7 @@
 <style scoped>
 
 .form-control{
-  min-height: 45px !important;
-  overflow-y: hidden;
+  height: 50px !important;
 }
 .input-group{
   margin-bottom: 10px !important;
