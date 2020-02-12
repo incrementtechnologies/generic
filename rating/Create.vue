@@ -47,18 +47,21 @@
 
 </style>
 <script>
-  import ROUTER from '../../../../router'
-  import AUTH from '../../../../services/auth'
-  import CONFIG from '../../../../config.js'
+  import ROUTER from 'src/router'
+  import AUTH from 'src/services/auth'
+  import CONFIG from 'src/config.js'
   export default{
     data(){
       return {
         user: AUTH.user,
         active: 0,
-        errorMessage: null
+        errorMessage: null,
+        payload: null,
+        payloadValue: null,
+        payload1: null,
+        payloadValue1: null
       }
     },
-    props: ['payload', 'payloadValue'],
     methods: {
       redirect(parameter){
         ROUTER.push(parameter)
@@ -67,7 +70,17 @@
         this.active = index
       },
       cancel(){
+        this.payload = null
+        this.payloadValue = null
         this.active = 0
+        $('#submitRatingModal').modal('hide')
+      },
+      show(payload, payloadValue, payload1, payloadValue1){
+        this.payload = payload
+        this.payloadValue = payloadValue
+        this.payload1 = payload1
+        this.payloadValue1 = payloadValue1
+        $('#submitRatingModal').modal('show')
       },
       create(){
         if(this.active > 0){
@@ -75,7 +88,10 @@
             payload: this.payload,
             payload_value: this.payloadValue,
             account_id: this.user.userID,
-            value: this.active
+            value: this.active,
+            payload_1: this.payload1,
+            payload_value_1: this.payloadValue1,
+            status: 'all'
           }
           this.APIRequest('ratings/create', parameter).then(response => {
             if(response.error.length > 0){

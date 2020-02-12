@@ -11,12 +11,12 @@
           {{item.title}}
         </option>
       </select>
-      <input type="text" class="form-control" v-model="searchValue" @keypress="keypressHandler" :placeholder="'Search ' + '...'">
-      <div class="view-container">
+      <input :type="(activeSort !== null && (typeof activeSort[sortValue].input_type !== undefined && activeSort[sortValue].input_type !== 'undefined')) ? activeSort[sortValue].input_type : 'text'" class="form-control" v-model="searchValue" @keypress="keypressHandler" :placeholder="'Search ' + '...'">
+<!--       <div class="view-container">
         <div class="view-option">
           <i :class="`fa fa-${grid[toggleStyle]}`" @click="changeView()" aria-hidden="true"></i>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -52,6 +52,9 @@
   border-bottom-left-radius: 0px !important;
   border-top-right-radius: 0px !important;
   border-bottom-right-radius: 0px !important;
+}
+.dropdown {
+  z-index: -1 !important;
 }
 @media (max-width: 650px){
   .dropdown {

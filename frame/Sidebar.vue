@@ -116,7 +116,7 @@
 .profile-image-holder img{
   width: 80px;
   height: 80px;
-  border-radius: 5px;
+  border-radius: 50%;
 }
 
 .profile-photo .profile-icon{
@@ -191,7 +191,7 @@
 
 .menu-holder-hidden i{
   font-size: 20px;
-  padding-right: 5px;
+  padding-right: 5px; 
 }
 
 /*---------------------------------------------------------          
@@ -207,6 +207,7 @@
   }
   .sidebar-collapse{
     display: block;
+    position: fixed; /*- fixed sidebar -*/
   }
   .sidebar-menu .header span{
     display: block;
@@ -214,16 +215,17 @@
   .content-holder{
     width: 81%;
     margin: 60px 0px 0px 0px;
-    float: left;
+    float: right; /*- changed float left to right -*/
   }
   /*  Change with Menu Toggled */
   .main-sidebar.hidden{
     width: 5%;
+    position: fixed; /*- fixed sidebar -*/
   }
   .content-holder.hidden{
     width: 94%;
     margin: 60px 0px 0px 1%;
-    float: left;
+    float: right; /*- changed float from left to right -*/
   }
 }
 
@@ -236,13 +238,14 @@
   .content-holder{
     width: 72%;
     margin: 60px 0px 0px 0px;
-    float: left;
+    float: right; /*- changed float from left to right -*/
   }
   .main-sidebar.active{
     padding-left:15%;
   }
   .sidebar-collapse{
     display: block;
+    position: fixed; /*- fixed sidebar -*/
   }
   .sidebar-menu .header span{
     display: block;
@@ -251,11 +254,12 @@
   /*  Change with Menu Toggled */
   .main-sidebar.hidden{
     width: 5%;
+    position: fixed; /*- fixed sidebar -*/
   }
   .content-holder.hidden{
     width: 94%;
     margin: 60px 0px 0px 1%;
-    float: left;
+    float: right; /*- changed float from left to right -*/
   }
 }
 
@@ -263,12 +267,13 @@
 @media (max-width: 991px){
   .main-sidebar{
     width: 100%;
-    position: absolute;
+    position: fixed;
     top:0;
     left: 0;
     z-index: 30;
     background-color: rgba(0,0,0,0.5);
     margin-top: 50px;
+    height: 100vh;
   }
   .content-holder{
     min-height: 10px;
@@ -279,8 +284,9 @@
   }
   .main-sidebar ul{
     background: #fff;
-    width: 90%;
+    width: 60%;
     min-height: 400px;
+    height: 100vh;
   }
    .sm-title{
     text-align: center;
@@ -321,12 +327,17 @@
   }
   .main-sidebar{
     width: 90%;
-    position: absolute;
+    position: fixed;
     top:0;
     left: 0;
     z-index: 10;
     background: #fff;
     margin-top: 100px;
+    height: 100vh;
+  }
+
+  .main-sidebar ul{
+    height: 100vh;
   }
 
   .content-holder{
@@ -390,8 +401,27 @@ export default {
       menuFlag: true
     }
   },
+  watch: {
+    '$route' (to, from) {
+      let index = null
+      for (var i = 0; i < COMMON.sidebarMenu.length; i++) {
+        let item = COMMON.sidebarMenu[i]
+        if(to.name === item.path){
+          index = i
+          break
+        }
+      }
+      if(index !== null){
+        this.setActiveOnWatch(index, to.path)
+      }else{
+        if(this.prevMenu !== null){
+          this.menu[this.prevMenu].flag = false
+        }
+      }
+    }
+  },
   methods: {
-    setActive(index){
+    setActive(index, code = null){
       if(this.prevMenu !== index){
         this.menu[this.prevMenu].flag = false
         this.menu[index].flag = true
@@ -402,6 +432,20 @@ export default {
       }
       if(this.menu[index].subMenu === null){
         ROUTER.push('/' + this.menu[this.prevMenu].path)
+        $('.navbar-collapse').collapse('hide')
+      }
+    },
+    setActiveOnWatch(index, path){
+      if(this.prevMenu !== index){
+        this.menu[this.prevMenu].flag = false
+        this.menu[index].flag = true
+        if(this.menu[this.prevMenu].subMenu !== null){
+          this.menu[this.prevMenu].subMenu[this.subPrevMenu].flag = false
+        }
+        this.prevMenu = index
+      }
+      if(this.menu[index].subMenu === null){
+        ROUTER.push(path)
         $('.navbar-collapse').collapse('hide')
       }
     },
