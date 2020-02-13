@@ -62,7 +62,7 @@
 <style scoped>
 
 .form-control{
-  height: 50px !important;
+  min-height: 50px !important;
 }
 .input-group{
   margin-bottom: 10px !important;
