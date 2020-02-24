@@ -54,7 +54,7 @@
   border-bottom-right-radius: 0px !important;
 }
 .dropdown {
-  z-index: -1 !important;
+  z-index: 0 !important;
 }
 @media (max-width: 650px){
   .dropdown {
@@ -160,6 +160,7 @@ export default {
       this.sortValue = this.filterValue
     },
     changeSort(){
+      console.log('hi')
       let object = {}
       let filter = {
         column: this.activeSort[this.sortValue].payload,

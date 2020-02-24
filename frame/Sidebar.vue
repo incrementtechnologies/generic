@@ -50,6 +50,7 @@
       </div>
 
       <div class="content-holder" v-bind:class="hide">
+        <system-notification></system-notification>
         <transition >
           <router-view ></router-view>
         </transition>
@@ -71,10 +72,17 @@
   z-index: 10000;
 }
 
+.sidebar{
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
 .sidebar-menu{
   list-style: none;
   padding: 0px;
   margin: 0px;
+  min-height: 100vh;
+  overflow-y: auto;
 }
 
 .sidebar-menu .header{
@@ -400,6 +408,9 @@ export default {
       subPrevMenu: 0,
       menuFlag: true
     }
+  },
+  components: {
+    'system-notification': require('components/increment/generic/system/Notifications.vue')
   },
   watch: {
     '$route' (to, from) {
