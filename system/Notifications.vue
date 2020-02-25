@@ -47,7 +47,7 @@ export default {
       }
       this.APIRequest('system_notifications/retrieve', parameter).then(response => {
         if(response.data.length > 0){
-          this.data = response.data[0]
+          this.data = response.data
         }else{
           this.data = null
         }

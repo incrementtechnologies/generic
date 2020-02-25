@@ -26,8 +26,8 @@
           <td>{{item.title}}</td>
           <td>{{item.description}}</td>
           <td>
-            <button class="btn btn-primary"><i class="fa fa-pencil"></i></button>
-            <button class="btn btn-danger"><i class="fa fa-trash" @click="removeItem(item)"></i></button>
+            <button class="btn btn-primary" @click="showTransferModal('update', item)"><i class="fa fa-pencil"></i></button>
+            <button class="btn btn-danger" @click="removeItem(item)"><i class="fa fa-trash"></i></button>
           </td>
         </tr>
       </tbody>
