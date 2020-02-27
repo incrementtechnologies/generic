@@ -9,9 +9,6 @@
   </div>
 </template>
 <style scoped>
-.alert{
-  margin-right: 1%;
-}
 </style>
 <script>
 import ROUTER from 'src/router'

@@ -221,8 +221,9 @@
     display: block;
   }
   .content-holder{
-    width: 81%;
+    width: 80%;
     margin: 60px 0px 0px 0px;
+    margin-right: 1%;
     float: right; /*- changed float left to right -*/
   }
   /*  Change with Menu Toggled */
@@ -244,8 +245,9 @@
     float: left;
   }
   .content-holder{
-    width: 72%;
+    width: 71%;
     margin: 60px 0px 0px 0px;
+    margin-right: 1%;
     float: right; /*- changed float from left to right -*/
   }
   .main-sidebar.active{
