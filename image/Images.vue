@@ -166,7 +166,10 @@ export default {
           value: this.user.userID,
           column: 'account_id',
           clause: '='
-        }]
+        }],
+        sort: {
+          created_at: 'desc'
+        }
       }
       $('#loading').css({'display': 'block'})
       this.APIRequest('images/retrieve', parameter).then(response => {
