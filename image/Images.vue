@@ -153,7 +153,7 @@ export default {
       formData.append('file_url', this.file.name)
       formData.append('account_id', this.user.userID)
       $('#loading').css({'display': 'block'})
-      axios.post(this.config.BACKEND_URL + '/images/upload', formData).then(response => {
+      axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data !== null){
           this.retrieve()
