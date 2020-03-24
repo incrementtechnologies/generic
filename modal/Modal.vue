@@ -10,7 +10,7 @@
         </div>
         <div class="modal-body">
           <span v-if="errorMessage !== null" class="text-danger text-center">
-              <label><b>Opps! </b>{{errorMessage}}</label>
+              <label><b>Oops! </b>{{errorMessage}}</label>
           </span>
           <br v-if="errorMessage !== null">
           <div class="form-group" v-bind:class="(item.row !== 'full' ? item.row + ' float-left' : '')" v-for="(item, index) in property.inputs" :key="index">
@@ -22,15 +22,35 @@
             </label>
 
             <!-- Error input validation -->
-            <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input' || item.type === 'textarea') && item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)" style="float: left; width: 100%;"><b>Opps!</b> Length must be greater than equal {{item.validation.size}}.</label>
+            <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input' || item.type === 'textarea') && item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)" style="float: left; width: 100%;"><b>Oops!</b> Length must be greater than equal {{item.validation.size}}.</label>
 
-            <label class="text-danger" v-bind:for="item.id" v-if="item.type === 'input' && item.value !== null && item.validation.type === 'email' && item.validation.flag === false" style="float: left; width: 100%;"><b>Opps!</b> Invalid email address.</label>
+            <label class="text-danger" v-bind:for="item.id" v-if="item.type === 'input' && item.value !== null && item.validation.type === 'email' && item.validation.flag === false" style="float: left; width: 100%;"><b>Oops!</b> Invalid email address.</label>
 
-            <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input') && item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))" style="float: left; width: 100%;"><b>Opps!</b> Minimum value is {{item.validation.size}}.</label>
+            <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input') && item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))" style="float: left; width: 100%;"><b>Oops!</b> Minimum value is {{item.validation.size}}.</label>
 
             <!-- Input Tag -->
-            <input v-bind:type="item.inputType" class="form-control" v-model="item.value" v-if="item.type === 'input'" v-bind:placeholder="item.placeholder" v-bind:class="{'invalid-inputs': (item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))) || (item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)) || (item.value !== null && item.validation.type === 'email' && item.validation.flag === false)}" @keyup="validateTyping(item)" :disabled="item.disabled === true">
+            <input 
+              v-bind:type="item.inputType" 
+              class="form-control" 
+              v-model="item.value" 
+              v-if="item.type === 'input'" 
+              v-bind:placeholder="item.placeholder" 
+              v-bind:class="{'invalid-inputs': (item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))) || (item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)) || (item.value !== null && item.validation.type === 'email' && item.validation.flag === false)}" 
+              @keyup="validateTyping(item)" :disabled="item.disabled === true">
             
+            <!-- Location Tag -->
+            <vue-google-autocomplete
+              v-if="item.type === 'location'"
+              ref="address"
+              v-bind:id="item.id"
+              v-bind:placeholder="item.placeholder"
+              classname="form-control"
+              v-on:placechanged="getAddressData"
+              style="height: 45px !important;"
+              v-on:inputChange="onClearVueGoogle()"
+            >
+            </vue-google-autocomplete>
+
             <!-- Select Tag with specified value -->
             <select class="form-control form-control-custom" v-if="item.type === 'select_specified'" v-model="item.value" v-bind:placeholder="item.placeholder">
               <option v-for="(itemOption, indexOption) in item.options" v-bind:value="itemOption.value" :key="indexOption">{{itemOption.label}}</option>
@@ -83,16 +103,29 @@
 import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
+import VueGoogleAutocomplete from 'vue-google-autocomplete'
 export default {
   data(){
     return {
       user: AUTH.user,
       config: CONFIG,
       errorMessage: null,
-      parameter: null
+      parameter: null,
+      searchLocation: '',
+      location: {
+        route: null,
+        locality: null,
+        region: null,
+        country: null,
+        latitude: 0,
+        longitude: 0
+      }
     }
   },
   props: ['property'],
+  components: {
+    VueGoogleAutocomplete
+  },
   methods: {
     hideModal(){
       $('#' + this.property.id).modal('hide')
@@ -106,6 +139,36 @@ export default {
             item.validation.flag = true
           }
           break
+      }
+    },
+    getAddressData(addressData, placeResultData, id) {
+      if(addressData.route === null || addressData.route === ''){
+        this.searchLocation = null
+        return
+      }
+      if(addressData.locality === null || addressData.locality === ''){
+        this.searchLocation = null
+        return
+      }
+      if(addressData.country === null || addressData.country === ''){
+        this.searchLocation = null
+        return
+      }
+      this.location = {
+        route: addressData.route,
+        locality: addressData.locality,
+        region: addressData.administrative_area_level_1,
+        country: addressData.country,
+        latitude: addressData.latitude,
+        longitude: addressData.longitude
+      }
+      let location = this.location
+      this.searchLocation = location.route
+    },
+    onClearVueGoogle(){
+      this.searchLocation = this.$refs.address.autocompleteText
+      if($('head #location-style').length === 0) {
+        $('head').append('<style id="location-style">.pac-container {z-index: 99999999 !important;}')
       }
     },
     validate(){
@@ -147,6 +210,11 @@ export default {
               return false
             }else{
               this.parameter[item.variable] = item.value
+            }
+          } else if (item.validation.type === 'location') {
+            if(this.location.route === null || this.searchLocation === '') {
+              this.errorMessage = item.label + ' is required'
+              return false
             }
           }
         }else{
