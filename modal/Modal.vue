@@ -16,7 +16,7 @@
           <div class="form-group" v-bind:class="(item.row !== 'full' ? item.row + ' float-left' : '')" v-for="(item, index) in property.inputs" :key="index">
             
             <!-- Label -->
-            <label v-bind:for="item.id" style="float: left; width: 100%;">
+            <label v-if="item.inputType !== 'hidden'" v-bind:for="item.id" style="float: left; width: 100%;">
               {{item.label}}
               <label class="text-danger" v-if="item.required === true">*</label>
             </label>
@@ -43,7 +43,7 @@
               v-if="item.type === 'location'"
               ref="address"
               v-bind:id="item.id"
-              v-bind:placeholder="item.placeholder"
+              v-bind:placeholder="item.placeholder" 
               classname="form-control"
               v-on:placechanged="getAddressData"
               style="height: 45px !important;"
@@ -164,6 +164,90 @@ export default {
       }
       let location = this.location
       this.searchLocation = location.route
+      this.property.inputs.push({
+        row: 'full',
+        label: 'Route',
+        variable: 'route',
+        placeholder: 'Enter route',
+        value: location.route,
+        required: true,
+        id: 'route',
+        type: 'input',
+        inputType: 'hidden',
+        validation: {
+          size: 1,
+          type: 'text'
+        }})
+      this.property.inputs.push({
+        row: 'full',
+        label: 'Locality',
+        variable: 'locality',
+        placeholder: 'Enter locality',
+        value: location.locality,
+        required: true,
+        id: 'locality',
+        type: 'input',
+        inputType: 'hidden',
+        validation: {
+          size: 1,
+          type: 'text'
+        }})
+      this.property.inputs.push({
+        row: 'full',
+        label: 'Region',
+        variable: 'region',
+        placeholder: 'Enter region',
+        value: location.region,
+        required: true,
+        id: 'region',
+        type: 'input',
+        inputType: 'hidden',
+        validation: {
+          size: 1,
+          type: 'text'
+        }})
+      this.property.inputs.push({
+        row: 'full',
+        label: 'Country',
+        variable: 'country',
+        placeholder: 'Enter country',
+        value: location.country,
+        required: true,
+        id: 'country',
+        type: 'input',
+        inputType: 'hidden',
+        validation: {
+          size: 1,
+          type: 'text'
+        }})
+      this.property.inputs.push({
+        row: 'full',
+        label: 'Latitude',
+        variable: 'latitude',
+        placeholder: 'Enter latitude',
+        value: location.latitude,
+        required: true,
+        id: 'latitude',
+        type: 'input',
+        inputType: 'hidden',
+        validation: {
+          size: 1,
+          type: 'text'
+        }})
+      this.property.inputs.push({
+        row: 'full',
+        label: 'Longitude',
+        variable: 'longitude',
+        placeholder: 'Enter longitude',
+        value: location.longitude,
+        required: true,
+        id: 'longitude',
+        type: 'input',
+        inputType: 'hidden',
+        validation: {
+          size: 1,
+          type: 'text'
+        }})
     },
     onClearVueGoogle(){
       this.searchLocation = this.$refs.address.autocompleteText
