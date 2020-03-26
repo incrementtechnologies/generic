@@ -122,7 +122,6 @@ export default {
         GOOGLE_API_KEY: CONFIG.GOOGLE_API_KEY,
         results: {
           style: {
-
           }
         },
         placeholder: 'Type Location'
@@ -171,90 +170,122 @@ export default {
       }
       let location = this.location
       this.searchLocation = location.route
-      this.property.inputs.push({
-        row: 'full',
-        label: 'Route',
-        variable: 'route',
-        placeholder: 'Enter route',
-        value: location.route,
-        required: true,
-        id: 'route',
-        type: 'input',
-        inputType: 'hidden',
-        validation: {
-          size: 1,
-          type: 'text'
-        }})
-      this.property.inputs.push({
-        row: 'full',
-        label: 'Locality',
-        variable: 'locality',
-        placeholder: 'Enter locality',
-        value: location.locality,
-        required: true,
-        id: 'locality',
-        type: 'input',
-        inputType: 'hidden',
-        validation: {
-          size: 1,
-          type: 'text'
-        }})
-      this.property.inputs.push({
-        row: 'full',
-        label: 'Region',
-        variable: 'region',
-        placeholder: 'Enter region',
-        value: location.region,
-        required: true,
-        id: 'region',
-        type: 'input',
-        inputType: 'hidden',
-        validation: {
-          size: 1,
-          type: 'text'
-        }})
-      this.property.inputs.push({
-        row: 'full',
-        label: 'Country',
-        variable: 'country',
-        placeholder: 'Enter country',
-        value: location.country,
-        required: true,
-        id: 'country',
-        type: 'input',
-        inputType: 'hidden',
-        validation: {
-          size: 1,
-          type: 'text'
-        }})
-      this.property.inputs.push({
-        row: 'full',
-        label: 'Latitude',
-        variable: 'latitude',
-        placeholder: 'Enter latitude',
-        value: location.latitude,
-        required: true,
-        id: 'latitude',
-        type: 'input',
-        inputType: 'hidden',
-        validation: {
-          size: 1,
-          type: 'text'
-        }})
-      this.property.inputs.push({
-        row: 'full',
-        label: 'Longitude',
-        variable: 'longitude',
-        placeholder: 'Enter longitude',
-        value: location.longitude,
-        required: true,
-        id: 'longitude',
-        type: 'input',
-        inputType: 'hidden',
-        validation: {
-          size: 1,
-          type: 'text'
-        }})
+      let flag = false
+      for (var i = 0; i < this.property.inputs.length; i++) {
+        let item = this.property.inputs[i]
+        if(item.variable === 'route'){
+          flag = true
+          break
+        }
+      }
+      if(flag === false){
+        this.property.inputs.push({
+          row: 'full',
+          label: 'Route',
+          variable: 'route',
+          placeholder: 'Enter route',
+          value: location.route,
+          required: true,
+          id: 'route',
+          type: 'input',
+          inputType: 'hidden',
+          validation: {
+            size: 1,
+            type: 'text'
+          }})
+        this.property.inputs.push({
+          row: 'full',
+          label: 'Locality',
+          variable: 'locality',
+          placeholder: 'Enter locality',
+          value: location.locality,
+          required: true,
+          id: 'locality',
+          type: 'input',
+          inputType: 'hidden',
+          validation: {
+            size: 1,
+            type: 'text'
+          }})
+        this.property.inputs.push({
+          row: 'full',
+          label: 'Region',
+          variable: 'region',
+          placeholder: 'Enter region',
+          value: location.region,
+          required: true,
+          id: 'region',
+          type: 'input',
+          inputType: 'hidden',
+          validation: {
+            size: 1,
+            type: 'text'
+          }})
+        this.property.inputs.push({
+          row: 'full',
+          label: 'Country',
+          variable: 'country',
+          placeholder: 'Enter country',
+          value: location.country,
+          required: true,
+          id: 'country',
+          type: 'input',
+          inputType: 'hidden',
+          validation: {
+            size: 1,
+            type: 'text'
+          }})
+        this.property.inputs.push({
+          row: 'full',
+          label: 'Latitude',
+          variable: 'latitude',
+          placeholder: 'Enter latitude',
+          value: location.latitude,
+          required: true,
+          id: 'latitude',
+          type: 'input',
+          inputType: 'hidden',
+          validation: {
+            size: 1,
+            type: 'text'
+          }})
+        this.property.inputs.push({
+          row: 'full',
+          label: 'Longitude',
+          variable: 'longitude',
+          placeholder: 'Enter longitude',
+          value: location.longitude,
+          required: true,
+          id: 'longitude',
+          type: 'input',
+          inputType: 'hidden',
+          validation: {
+            size: 1,
+            type: 'text'
+          }})
+      }else{
+        this.property.inputs.map(item => {
+          if(item.variable === 'route'){
+            item.value = location.route
+          }
+          if(item.variable === 'locality'){
+            item.value = location.locality
+          }
+          if(item.variable === 'latitude'){
+            item.value = location.latitude
+          }
+          if(item.variable === 'longitude'){
+            item.value = location.longitude
+          }
+          if(item.variable === 'region'){
+            item.value = location.region
+          }
+          if(item.variable === 'country'){
+            item.value = location.country
+          }
+          return item
+        })
+      }
     },
     validate(){
       this.parameter = {}

@@ -138,7 +138,7 @@ export default {
       let location = {
         latitude: item.geometry.location.lat,
         longitude: item.geometry.location.lng,
-        route: item.name + ', ' + locationArray[0],
+        route: item.name + ((locationArray.length > 3) ? ', ' + locationArray[0] : ''),
         locality: locality,
         country: country,
         region: region
