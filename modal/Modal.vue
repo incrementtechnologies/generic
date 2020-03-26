@@ -43,7 +43,7 @@
               v-if="item.type === 'location'"
               ref="address"
               v-bind:id="item.id"
-              v-bind:placeholder="item.placeholder" 
+              v-bind:placeholder="item.placeholder"
               classname="form-control"
               v-on:placechanged="getAddressData"
               style="height: 45px !important;"
