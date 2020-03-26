@@ -13,7 +13,7 @@
               <label><b>Oops! </b>{{errorMessage}}</label>
           </span>
           <br v-if="errorMessage !== null">
-          <div class="form-group" v-bind:class="(item.row !== 'full' ? item.row + ' float-left' : '')" v-for="(item, index) in property.inputs" :key="index">
+          <div class="form-group d-flex flex-column" v-bind:class="(item.row !== 'full' ? item.row + ' float-left' : '')" v-for="(item, index) in property.inputs" :key="index">
             
             <!-- Label -->
             <label v-if="item.inputType !== 'hidden'" v-bind:for="item.id" style="float: left; width: 100%;">
@@ -39,17 +39,13 @@
               @keyup="validateTyping(item)" :disabled="item.disabled === true">
             
             <!-- Location Tag -->
-            <vue-google-autocomplete
+            <google-autocomplete-location
               v-if="item.type === 'location'"
-              ref="address"
               v-bind:id="item.id"
-              v-bind:placeholder="item.placeholder"
-              classname="form-control"
-              v-on:placechanged="getAddressData"
-              style="height: 45px !important;"
-              v-on:inputChange="onClearVueGoogle()"
+              :property="googleProperty"
+              @onFinish="getAddressData($event)"
             >
-            </vue-google-autocomplete>
+            </google-autocomplete-location>
 
             <!-- Select Tag with specified value -->
             <select class="form-control form-control-custom" v-if="item.type === 'select_specified'" v-model="item.value" v-bind:placeholder="item.placeholder">
@@ -103,7 +99,6 @@
 import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
-import VueGoogleAutocomplete from 'vue-google-autocomplete'
 export default {
   data(){
     return {
@@ -119,12 +114,24 @@ export default {
         country: null,
         latitude: 0,
         longitude: 0
+      },
+      googleProperty: {
+        style: {
+          height: '45px !important'
+        },
+        GOOGLE_API_KEY: CONFIG.GOOGLE_API_KEY,
+        results: {
+          style: {
+
+          }
+        },
+        placeholder: 'Type Location'
       }
     }
   },
   props: ['property'],
   components: {
-    VueGoogleAutocomplete
+    'google-autocomplete-location': require('src/components/increment/generic/location/GooglePlacesAutoComplete.vue')
   },
   methods: {
     hideModal(){
@@ -141,26 +148,26 @@ export default {
           break
       }
     },
-    getAddressData(addressData, placeResultData, id) {
-      if(addressData.route === null || addressData.route === ''){
+    getAddressData(event) {
+      if(event.route === null || event.route === ''){
         this.searchLocation = null
         return
       }
-      if(addressData.locality === null || addressData.locality === ''){
+      if(event.locality === null || event.locality === ''){
         this.searchLocation = null
         return
       }
-      if(addressData.country === null || addressData.country === ''){
+      if(event.country === null || event.country === ''){
         this.searchLocation = null
         return
       }
       this.location = {
-        route: addressData.route,
-        locality: addressData.locality,
-        region: addressData.administrative_area_level_1,
-        country: addressData.country,
-        latitude: addressData.latitude,
-        longitude: addressData.longitude
+        route: event.route,
+        locality: event.locality,
+        region: event.region,
+        country: event.country,
+        latitude: event.latitude,
+        longitude: event.longitude
       }
       let location = this.location
       this.searchLocation = location.route
@@ -248,12 +255,6 @@ export default {
           size: 1,
           type: 'text'
         }})
-    },
-    onClearVueGoogle(){
-      this.searchLocation = this.$refs.address.autocompleteText
-      if($('head #location-style').length === 0) {
-        $('head').append('<style id="location-style">.pac-container {z-index: 99999999 !important;}')
-      }
     },
     validate(){
       this.parameter = {}
