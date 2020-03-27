@@ -419,7 +419,7 @@ export default {
       let index = null
       for (var i = 0; i < COMMON.sidebarMenu.length; i++) {
         let item = COMMON.sidebarMenu[i]
-        if(to.name === item.path){
+        if(to.path === '/' + item.path){
           index = i
           break
         }
