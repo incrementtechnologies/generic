@@ -14,7 +14,7 @@
                 </span>
                 <i v-bind:class="toggleSidebar + ' pull-right'" aria-hidden="true" v-on:click="changeToggleSidebarIcon()" id="toggleIcon"></i>
             </li>
-            <li v-for="(item, index) in menu" :key="index" v-bind:class="{ 'active-menu': item.flag === true }" v-on:click="setActive(index)" v-if="(((item.accountType === user.type || item.accountType === 'ALL') && user.type !== 'ADMIN') || user.type === 'ADMIN') && (item.accountStatus === 'ALL' || (user.subAccount === null || (user.subAccount !== null && user.subAccount.status === item.accountStatus))) && menuFlag === true" class="menu-holder">
+            <li v-for="(item, index) in menu" :key="index" :class="item.flag || $route.path === '/' + item.path ? ' active-menu' : ''" v-on:click="setActive(index)" v-if="(((item.accountType === user.type || item.accountType === 'ALL') && user.type !== 'ADMIN') || user.type === 'ADMIN') && (item.accountStatus === 'ALL' || (user.subAccount === null || (user.subAccount !== null && user.subAccount.status === item.accountStatus))) && menuFlag === true" class="menu-holder">
               <i v-bind:class="item.icon" class=" visible"></i> 
               <label>{{item.description}}</label>
               <ul class="sub-menu" v-if="item.subMenu !== null">
@@ -417,11 +417,10 @@ export default {
   watch: {
     '$route' (to, from) {
       let index = null
-      for (var i = 0; i < COMMON.sidebarMenu.length; i++) {
+      for(var i = 0; i < COMMON.sidebarMenu.length && !index; i++) {
         let item = COMMON.sidebarMenu[i]
-        if(to.path === '/' + item.path){
+        if(to.path === '/' + item.path) {
           index = i
-          break
         }
       }
       if(index !== null){
