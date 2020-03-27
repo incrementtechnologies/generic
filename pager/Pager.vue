@@ -7,7 +7,7 @@
       <li class="page-item" v-if="active < pages"><span class="page-link" @click="onSelectedPage(active + 1)">{{active + 1}}</span></li>
       <li class="page-item" v-if="active < pages"><span class="page-link" @click="onNext()">Next</span></li>
     </ul>
-    <select class="btn btn-default pull-right" style="margin-right: 5px;" v-model="localLimit"  @change="changeLimit">
+    <select v-if="includesDropDown === true" class="btn btn-default pull-right" style="margin-right: 5px;" v-model="localLimit"  @change="changeLimit">
       <option class="dropdown-title" v-for="item in 5" :value="(item * 5)" :key="item">
         {{parseInt(item * 5)}}
       </option>
@@ -59,7 +59,7 @@ export default {
       localLimit: this.limit
     }
   },
-  props: ['pages', 'active', 'limit'],
+  props: ['pages', 'active', 'limit', 'includesDropDown'],
   methods: {
     onNext(){
       if(this.active < this.pages){
