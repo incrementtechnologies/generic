@@ -37,14 +37,64 @@
               v-bind:placeholder="item.placeholder" 
               v-bind:class="{'invalid-inputs': (item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))) || (item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)) || (item.value !== null && item.validation.type === 'email' && item.validation.flag === false)}" 
               @keyup="validateTyping(item)" :disabled="item.disabled === true">
+
+            <!-- Time Tag -->
+            <date-picker
+              v-if="item.type === 'time'"
+              v-model="item.value"
+              :type="'time'"
+              :value-type="'HH:mm:ss'"
+              :use12h="true"
+              :placeholder="item.placeholder"
+              :format="'hh:mm A'"
+              :input-class="'form-control'"
+              :input-attr="{style: 'min-height: 50px !important;'}"
+            ></date-picker>
+
+            <!-- Date Tag -->
+            <date-picker
+              v-if="item.type === 'date'"
+              v-model="item.value"
+              :type="'date'"
+              :value-type="'YYYY-MM-DD HH:mm:ss'"
+              :use12h="true"
+              :placeholder="item.placeholder"
+              :format="'MMM D, YYYY'"
+              :input-class="'form-control'"
+              :input-attr="{style: 'min-height: 50px !important;'}"
+            ></date-picker>
+
+            <!-- DateTime Tag -->
+            <date-picker
+              v-if="item.type === 'datetime'"
+              v-model="item.value"
+              :type="'datetime'"
+              :value-type="'YYYY-MM-DD HH:mm:ss'"
+              :use12h="true"
+              :placeholder="item.placeholder"
+              :format="'MMM, D, YYYY hh:mm A'"
+              :input-class="'form-control'"
+              :input-attr="{style: 'min-height: 50px !important;'}"
+            >
+            </date-picker>
             
-            <!-- Location Tag -->
+            <!-- Non-Concatenated Location Tag -->
             <google-autocomplete-location
-              v-if="item.type === 'location'"
+              v-if="item.type === 'location_non_concatenated'"
               v-bind:id="item.id"
               :property="googleProperty"
-              @onFinish="getAddressData($event)"
+              @onFinish="getNonConcatenated($event)"
             >
+            </google-autocomplete-location>
+
+            <!-- Concatenated Location Tag -->
+            <google-autocomplete-location
+              v-if="item.type === 'location_concatenated'"
+              v-bind:id="item.id"
+              :inputVal="item.value"
+              :placeholder="item.placeholder"
+              :property="googleProperty"
+              @onFinish="getConcatenated($event, item)">
             </google-autocomplete-location>
 
             <!-- Select Tag with specified value -->
@@ -76,7 +126,6 @@
   </div>
 </template>
 <style scoped>
-
 .form-control{
   min-height: 50px !important;
 }
@@ -94,11 +143,20 @@
 .float-left{
   float: left !important;
 }
+.mx-datepicker,
+.mx-input-wrapper {
+  width: unset;
+  position: unset;
+  display: unset;
+}
 </style>
 <script>
 import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
+import DatePicker from 'vue2-datepicker'
+import 'vue2-datepicker/index.css'
+
 export default {
   data(){
     return {
@@ -106,8 +164,8 @@ export default {
       config: CONFIG,
       errorMessage: null,
       parameter: null,
-      searchLocation: '',
-      location: {
+      concatenated: null,
+      not_concatenated: {
         route: null,
         locality: null,
         region: null,
@@ -125,12 +183,19 @@ export default {
           }
         },
         placeholder: 'Type Location'
+      },
+      lang: {
+        formatLocale: {
+          firstDayOfWeek: 1
+        },
+        monthBeforeYear: false
       }
     }
   },
   props: ['property'],
   components: {
-    'google-autocomplete-location': require('src/components/increment/generic/location/GooglePlacesAutoComplete.vue')
+    'google-autocomplete-location': require('src/components/increment/generic/location/GooglePlacesAutoComplete.vue'),
+    DatePicker
   },
   methods: {
     hideModal(){
@@ -147,20 +212,23 @@ export default {
           break
       }
     },
-    getAddressData(event) {
+    getConcatenated(event, item){
       if(event.route === null || event.route === ''){
-        this.searchLocation = null
+        this.concatenated = null
         return
       }
       if(event.locality === null || event.locality === ''){
-        this.searchLocation = null
+        this.concatenated = null
         return
       }
       if(event.country === null || event.country === ''){
-        this.searchLocation = null
+        this.concatenated = null
         return
       }
-      this.location = {
+      item.value = event.route + ', ' + event.locality + ', ' + event.country
+    },
+    getNonConcatenated(event) {
+      let location = {
         route: event.route,
         locality: event.locality,
         region: event.region,
@@ -168,8 +236,7 @@ export default {
         latitude: event.latitude,
         longitude: event.longitude
       }
-      let location = this.location
-      this.searchLocation = location.route
+      this.not_concatenated = location
       let flag = false
       for (var i = 0; i < this.property.inputs.length; i++) {
         let item = this.property.inputs[i]
@@ -327,8 +394,20 @@ export default {
             }else{
               this.parameter[item.variable] = item.value
             }
-          } else if (item.validation.type === 'location') {
-            if(this.location.route === null || this.searchLocation === '') {
+          } else if (item.validation.type === 'location_non_concatenated') {
+            let exists = false
+            for(var j = 0; j < inputs.length && !exists; j++) {
+              let check = inputs[j]
+              if(check.variable === 'route' && check.value !== null) {
+                exists = true
+              }
+            }
+            if(!exists) {
+              this.errorMessage = item.label + ' is required'
+              return false
+            }
+          } else if (item.validation.type === 'location_concatenated') {
+            if(this.concatenated === null || this.concatenated === '') {
               this.errorMessage = item.label + ' is required'
               return false
             }
