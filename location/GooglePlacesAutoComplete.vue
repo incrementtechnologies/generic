@@ -1,6 +1,6 @@
 <template>
   <div class="google-autocomplete-holder">
-    <input type="text" class="form-control" v-model="searchValue" :style="property.style" @keyup="getPlaces()" :placeholder="placeholder ? placeholder : 'Type location'">
+    <input type="text" class="form-control" v-model="searchValue" :style="property.style" @keyup="getPlaces()" :placeholder="property.placeholder ? property.placeholder : 'Type location'">
     <span class="close-icon" @click="onCancel()" v-if="results !== null || selectedFlag === true">
       <i class="fas fa-times"></i>
     </span>
@@ -89,7 +89,7 @@ export default {
       selectedFlag: false
     }
   },
-  props: ['property', 'placeholder'],
+  props: ['property'],
   methods: {
     getPlaces(){
       if(this.searchValue === null || this.searchValue === ''){
