@@ -27,7 +27,7 @@ export default {
     })
     this.place_data.forEach(el => {
       var color
-      if(el.negtive_size > 0) {
+      if(el.negative_size > 0) {
         color = 'green'
       }
       if(el.pum_size > 0) {
