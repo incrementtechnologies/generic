@@ -34,7 +34,7 @@ export default {
   components: {
     googlemap: require('./GoogleMap')
   },
-  props: ['data'],
+  props: ['data', 'property'],
   methods: {
     hideModal(){
       $('#' + this.data.id).modal('hide')
