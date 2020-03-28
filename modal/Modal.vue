@@ -13,7 +13,7 @@
               <label><b>Oops! </b>{{errorMessage}}</label>
           </span>
           <br v-if="errorMessage !== null">
-          <div class="form-group d-flex flex-column" v-bind:class="(item.row !== 'full' ? item.row + ' float-left' : '')" v-for="(item, index) in property.inputs" :key="index" v-if="item.inputType !== 'hidden'">
+          <div class="form-group d-flex flex-column" v-bind:class="(item.row !== 'full' ? item.row + ' float-left' : '')" v-for="(item, index) in property.inputs" :key="index">
             
             <!-- Label -->
             <label v-if="item.inputType !== 'hidden'" v-bind:for="item.id" style="float: left; width: 100%;">
@@ -42,8 +42,6 @@
             <google-autocomplete-location
               v-if="item.type === 'location'"
               v-bind:id="item.id"
-              :inputVal="item.value"
-              :placeholder="item.placeholder"
               :property="googleProperty"
               @onFinish="getAddressData($event)"
             >
@@ -330,14 +328,7 @@ export default {
               this.parameter[item.variable] = item.value
             }
           } else if (item.validation.type === 'location') {
-            let exists = false
-            for(var j = 0; j < inputs.length && !exists; j++) {
-              let check = inputs[j]
-              if(check.variable === 'route' && check.value !== null) {
-                exists = true
-              }
-            }
-            if(!exists) {
+            if(this.location.route === null || this.searchLocation === '') {
               this.errorMessage = item.label + ' is required'
               return false
             }
