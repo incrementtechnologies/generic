@@ -59,7 +59,7 @@
               v-if="item.type === 'date'"
               v-model="item.value"
               :type="'date'"
-              :value-type="'YYYY-MM-DD HH:mm:ss'"
+              :value-type="'YYYY-MM-DD'"
               :use12h="true"
               :id="item.id"
               :placeholder="item.placeholder"
@@ -131,6 +131,9 @@
   </div>
 </template>
 <style scoped>
+.modal{
+  z-index: 1050 !important;
+}
 .form-control{
   min-height: 50px !important;
 }
@@ -360,6 +363,7 @@ export default {
       }
     },
     validate(){
+      var moment = require('moment')
       this.parameter = {}
       let inputs = this.property.inputs
       for (var i = 0; i < inputs.length; i++) {
@@ -379,6 +383,16 @@ export default {
               this.parameter[item.variable] = item.value
             }
           }else if(item.validation.type === 'date' || item.validation.type === 'datetime-local'){
+            if(item.value === null){
+              this.errorMessage = item.label + ' is required'
+              return false
+            }else if(moment(item.value).isValid() === false){
+              this.errorMessage = item.label + ' is invalid'
+              return false
+            }else{
+              this.parameter[item.variable] = item.value
+            }
+          }else if(item.validation.type === 'time'){
             if(item.value === null){
               this.errorMessage = item.label + ' is required'
               return false
