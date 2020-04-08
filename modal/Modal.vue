@@ -34,6 +34,8 @@
               class="form-control" 
               v-model="item.value" 
               v-if="item.type === 'input'" 
+              :id="item.id"
+              :value="item.value"
               v-bind:placeholder="item.placeholder" 
               v-bind:class="{'invalid-inputs': (item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))) || (item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)) || (item.value !== null && item.validation.type === 'email' && item.validation.flag === false)}" 
               @keyup="validateTyping(item)" :disabled="item.disabled === true">
@@ -45,6 +47,7 @@
               :type="'time'"
               :value-type="'HH:mm:ss'"
               :use12h="true"
+              :id="item.id"
               :placeholder="item.placeholder"
               :format="'hh:mm A'"
               :input-class="'form-control'"
@@ -56,8 +59,9 @@
               v-if="item.type === 'date'"
               v-model="item.value"
               :type="'date'"
-              :value-type="'YYYY-MM-DD HH:mm:ss'"
+              :value-type="'YYYY-MM-DD'"
               :use12h="true"
+              :id="item.id"
               :placeholder="item.placeholder"
               :format="'MMM D, YYYY'"
               :input-class="'form-control'"
@@ -69,6 +73,7 @@
               v-if="item.type === 'datetime'"
               v-model="item.value"
               :type="'datetime'"
+              :id="item.id"
               :value-type="'YYYY-MM-DD HH:mm:ss'"
               :use12h="true"
               :placeholder="item.placeholder"
@@ -126,6 +131,9 @@
   </div>
 </template>
 <style scoped>
+.modal{
+  z-index: 1050 !important;
+}
 .form-control{
   min-height: 50px !important;
 }
@@ -355,6 +363,7 @@ export default {
       }
     },
     validate(){
+      var moment = require('moment')
       this.parameter = {}
       let inputs = this.property.inputs
       for (var i = 0; i < inputs.length; i++) {
@@ -374,6 +383,16 @@ export default {
               this.parameter[item.variable] = item.value
             }
           }else if(item.validation.type === 'date' || item.validation.type === 'datetime-local'){
+            if(item.value === null){
+              this.errorMessage = item.label + ' is required'
+              return false
+            }else if(moment(item.value).isValid() === false){
+              this.errorMessage = item.label + ' is invalid'
+              return false
+            }else{
+              this.parameter[item.variable] = item.value
+            }
+          }else if(item.validation.type === 'time'){
             if(item.value === null){
               this.errorMessage = item.label + ' is required'
               return false
