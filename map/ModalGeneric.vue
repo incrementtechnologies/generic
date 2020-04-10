@@ -9,7 +9,13 @@
       aria-hidden="true"
     >
       <div class="modal-dialog modal-full" role="document">
-        <div class="modal-content">
+        <div class="modal-content" :style="style">
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title" id="exampleModalLabel">Map Viewer</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="hideModal()">
+              <span aria-hidden="true" class="text-white">&times;</span>
+            </button>
+          </div>
           <div class="modal-body" id="result">
             <div class="row">
               <div class="col-sm-12 col-lg-12">
@@ -23,22 +29,22 @@
   </div>
 </template>
 <script>
+import Jquery from 'jquery'
 export default {
-  props: ['place_data'],
+  props: ['place_data', 'style'],
   data(){
     return{
       map: null
     }
   },
   components: {
-    googlemap: require('./Generic')
   },
   methods: {
     showModal(){
-      $('#mapmodal').modal('show')
+      Jquery('#mapmodal').modal('show')
     },
     hideModal(){
-      $('#mapmodal').modal('hide')
+      Jquery('#mapmodal').modal('hide')
     },
     getMap(callback) {
       let vm = this
@@ -52,11 +58,11 @@ export default {
   mounted() {
     this.map = new window.google.maps.Map(this.$refs['map'], {
       center: { lat: Number(this.place_data[0].latitude), lng: Number(this.place_data[0].longitude) },
-      zoom: 10
+      zoom: 11
     })
     this.place_data.forEach(el => {
       var infowindow = new window.google.maps.InfoWindow({
-        content: `<b>${el.route}, ${$el.locality}, ${el.country}</b>`
+        content: `<b>${el.route}, ${el.locality}, ${el.country}</b>`
       })
       var marker = new window.google.maps.Marker({
         position: { lat: Number(el.latitude), lng: Number(el.longitude) },
@@ -73,7 +79,20 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "~assets/style/colors.scss";
+.modal{
+  z-index: 100000 !important;
+}
+.text-primary{
+  color: $primary !important;
+}
+
+
+.bg-warning{
+  background: $warning !important;
+  color: $white !important;
+}
 #map {
   height: 600px;
   background: gray;

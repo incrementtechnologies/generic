@@ -27,7 +27,7 @@ export default {
     })
     this.place_data.forEach(el => {
       var infowindow = new window.google.maps.InfoWindow({
-        content: `<b>${el.route}, ${$el.locality}, ${el.country}</b>`
+        content: `<b>${el.route}, ${el.locality}, ${el.country}</b>`
       })
       var marker = new window.google.maps.Marker({
         position: { lat: Number(el.latitude), lng: Number(el.longitude) },
