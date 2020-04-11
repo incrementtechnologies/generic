@@ -9,7 +9,7 @@
       aria-hidden="true"
     >
       <div class="modal-dialog modal-full" role="document">
-        <div class="modal-content" :style="style">
+        <div class="modal-content" :style="propStyle">
           <div class="modal-header bg-warning">
             <h5 class="modal-title" id="exampleModalLabel">Map Viewer</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="hideModal()">
@@ -31,7 +31,7 @@
 <script>
 import Jquery from 'jquery'
 export default {
-  props: ['place_data', 'style'],
+  props: ['place_data', 'propStyle'],
   data(){
     return{
       map: null
