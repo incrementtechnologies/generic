@@ -1,8 +1,10 @@
 <template>
-  <div class="img-modal" @click="close()">
+  <div class="img-modal" v-if="data.length > 0">
     <div class="img-holder" :style="propStyle">
-      <font-awesome-icon :icon="faTimesCircle" class="close-icon" @click="close()"></font-awesome-icon>
-      <img :src="src" class="image-viewer" height="100%" width="100%" />
+      <font-awesome-icon :icon="faTimesCircle" class="close-icon icon" @click="close()"></font-awesome-icon>
+      <font-awesome-icon :icon="faChevronLeft" class="icon-prev icon" @click="setPrev()" v-if="activeIndex > 0"></font-awesome-icon>
+      <font-awesome-icon :icon="faChevronRight" class="icon-next icon" @click="setNext()" v-if="activeIndex < (data.length - 1)"></font-awesome-icon>
+      <img :src="data[activeIndex].url" class="image-viewer"/>
     </div>
   </div>
 </template>
@@ -21,6 +23,7 @@
   text-align: center;
   margin: auto;
   margin-top: 0px;
+  position: relative;
 }
 
 img{
@@ -37,8 +40,24 @@ img{
   float: right;
 }
 
-.close-icon:hover{
+.icon-prev, .icon-next{
+  font-size: 42px;
+  color: white;
+  top: 50vh;
+  position: absolute;
+}
+
+.icon-prev{
+  left: -25px;
+}
+
+.icon-next{
+  right: -25px;
+}
+
+.icon:hover{
   cursor: pointer;
+  color: $warning;
 }
 
 @media (max-width: 992px) {
@@ -48,31 +67,42 @@ img{
     margin-right: 5% !important;
     margin-top: 100px;
   }
+
+  .icon-prev, .icon-next{
+    top: 50%;
+  }
 }
 </style>
 <script>
 import $ from 'jquery'
-import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
+import { faTimesCircle, faChevronCircleRight, faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons'
 export default {
   mounted(){
   },
   data(){
     return {
-      src: null,
-      faTimesCircle: faTimesCircle
+      activeIndex: 0,
+      faTimesCircle: faTimesCircle,
+      faChevronLeft: faChevronCircleLeft,
+      faChevronRight: faChevronCircleRight
     }
   },
-  props: ['propStyle'],
+  props: ['propStyle', 'data'],
   methods: {
     close(){
-      this.src = null
+      this.activeIndex = 0
       $('.img-modal').css({
         display: 'none'
       })
     },
-    setImage(src){
-      console.log(src)
-      this.src = src
+    setNext(){
+      this.activeIndex++
+    },
+    setPrev(){
+      this.activeIndex--
+    },
+    setImage(index){
+      this.activeIndex = index
       $('.img-modal').css({
         display: 'block'
       })
