@@ -100,6 +100,7 @@
               :inputVal="item.value"
               :placeholder="item.placeholder"
               :property="googleProperty"
+              ref="location"
               @onFinish="getConcatenated($event, item)">
             </google-autocomplete-location>
 
