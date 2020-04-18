@@ -50,7 +50,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.place_data)
     this.map = new window.google.maps.Map(this.$refs['map'], {
       center: { lat: Number(this.place_data[0].latitude), lng: Number(this.place_data[0].longitude) },
       zoom: 8

@@ -373,7 +373,7 @@ export default {
           if(item.type === 'select_increment' || item.type === 'select_specified' || item.type === 'select_decrement'){
             this.parameter[item.variable] = item.value
           }else if(item.validation.type === 'text'){
-            if(item.value === null){
+            if(item.value === null && item.required){
               this.errorMessage = item.label + ' is required'
               return false
             }else if(item.value !== null && item.validation.size > item.value.length){
