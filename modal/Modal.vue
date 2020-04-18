@@ -88,6 +88,7 @@
               v-if="item.type === 'location_non_concatenated'"
               v-bind:id="item.id"
               :property="googleProperty"
+              ref="location"
               @onFinish="getNonConcatenated($event)"
             >
             </google-autocomplete-location>
@@ -99,6 +100,7 @@
               :inputVal="item.value"
               :placeholder="item.placeholder"
               :property="googleProperty"
+              ref="location"
               @onFinish="getConcatenated($event, item)">
             </google-autocomplete-location>
 
@@ -383,7 +385,7 @@ export default {
               this.parameter[item.variable] = item.value
             }
           }else if(item.validation.type === 'date' || item.validation.type === 'datetime-local'){
-            if(item.value === null){
+            if(item.value === null && item.required){
               this.errorMessage = item.label + ' is required'
               return false
             }else if(moment(item.value).isValid() === false){
@@ -400,7 +402,7 @@ export default {
               this.parameter[item.variable] = item.value
             }
           }else if(item.validation.type === 'number'){
-            if(item.value === null || item.validation.size > parseFloat(item.value)){
+            if((item.value === null || item.validation.size > parseFloat(item.value)) && item.required){
               this.errorMessage = item.label + ' must be greater than equal to ' + item.validation.size
               return false
             }else{
@@ -426,7 +428,7 @@ export default {
               return false
             }
           } else if (item.validation.type === 'location_concatenated') {
-            if(this.concatenated === null || this.concatenated === '') {
+            if((this.concatenated === null || this.concatenated === '') && item.required) {
               this.errorMessage = item.label + ' is required'
               return false
             }
