@@ -428,7 +428,7 @@ export default {
               return false
             }
           } else if (item.validation.type === 'location_concatenated') {
-            if((this.concatenated === null || this.concatenated === '') && item.required) {
+            if((item.value === null || item.value === '') && item.required) {
               this.errorMessage = item.label + ' is required'
               return false
             }
