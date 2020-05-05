@@ -1,5 +1,5 @@
 <template>
-  <div class="img-modal" v-if="data.length > 0">
+  <div class="img-modal" v-if="data.length > 0" :id="customId">
     <div class="img-holder" :style="propStyle">
       <font-awesome-icon :icon="faTimesCircle" class="close-icon icon" @click="close()"></font-awesome-icon>
       <font-awesome-icon :icon="faChevronLeft" class="icon-prev icon" @click="setPrev()" v-if="activeIndex > 0"></font-awesome-icon>
@@ -87,11 +87,11 @@ export default {
       faChevronRight: faChevronCircleRight
     }
   },
-  props: ['propStyle', 'data'],
+  props: ['propStyle', 'data', 'customId'],
   methods: {
     close(){
       this.activeIndex = 0
-      $('.img-modal').css({
+      $('#' + this.customId).css({
         display: 'none'
       })
     },
@@ -103,7 +103,7 @@ export default {
     },
     setImage(index){
       this.activeIndex = index
-      $('.img-modal').css({
+      $('#' + this.customId).css({
         display: 'block'
       })
     }
