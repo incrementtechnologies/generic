@@ -5,6 +5,14 @@
       <font-awesome-icon :icon="faChevronLeft" class="icon-prev icon" @click="setPrev()" v-if="activeIndex > 0"></font-awesome-icon>
       <font-awesome-icon :icon="faChevronRight" class="icon-next icon" @click="setNext()" v-if="activeIndex < (data.length - 1)"></font-awesome-icon>
       <img :src="data[activeIndex].url" class="image-viewer"/>
+      <div v-if="data[activeIndex].type === 'order_now'" class="actions">
+        <span class="text">
+          <label class="title pull-left">
+            <b>{{data[activeIndex].text}}</b>
+          </label>
+        </span>
+        <button class="btn btn-warning pull-right" @click="redirectExternal(data[activeIndex].link)">ORDER NOW</button>
+      </div>
     </div>
   </div>
 </template>
@@ -60,6 +68,36 @@ img{
   color: $warning;
 }
 
+.actions{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, .5);
+  width: 100%;
+  text-align: left;
+}
+
+.actions .text{
+  color: white;
+  display: table;
+  width: 70%;
+  float: left;
+  min-height: 50px;
+  height: 8vh;
+}
+
+.actions label{
+  display: table-cell;
+  vertical-align: middle;
+  padding-left: 10px;
+  margin: 0px;
+}
+
+.btn{
+  width: 30% !important;
+  float: left;
+}
+
 @media (max-width: 992px) {
   .img-holder{
     width: 90% !important;
@@ -70,6 +108,19 @@ img{
 
   .icon-prev, .icon-next{
     top: 50%;
+  }
+
+  .actions .text{
+    width: 100%;
+    text-align: center;
+  }
+
+  .actions label{
+    padding-left: 0px;
+  }
+
+  .btn{
+    width: 100% !important;
   }
 }
 </style>
@@ -100,6 +151,9 @@ export default {
     },
     setPrev(){
       this.activeIndex--
+    },
+    redirectExternal(link){
+      window.open(link, '_BLANK')
     },
     setImage(index){
       this.activeIndex = index
