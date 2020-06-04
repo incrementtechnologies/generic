@@ -4,8 +4,11 @@
       <font-awesome-icon :icon="faTimesCircle" class="close-icon icon" @click="close()"></font-awesome-icon>
       <font-awesome-icon :icon="faChevronLeft" class="icon-prev icon" @click="setPrev()" v-if="activeIndex > 0"></font-awesome-icon>
       <font-awesome-icon :icon="faChevronRight" class="icon-next icon" @click="setNext()" v-if="activeIndex < (data.length - 1)"></font-awesome-icon>
-      <img :src="data[activeIndex].url" class="image-viewer gallery-image-viewer"/>
-      <div v-if="data[activeIndex].type === 'order_now'" class="actions">
+      <span class="loading">
+        <font-awesome-icon :icon="faCircleNotch" class="fa-spin"></font-awesome-icon>
+      </span>
+      <img :src="data[activeIndex].url" class="image-viewer gallery-image-viewer" :key="activeIndex" id="image-view"/>
+      <div v-if="data[activeIndex].type === 'order_now'" class="actions"  :key="'a' + activeIndex">
         <span class="text">
           <label class="title pull-left">
             <b>{{data[activeIndex].text}}</b>
@@ -106,6 +109,20 @@
   float: left;
 }
 
+.loading{
+  font-size: 75px;
+  width: 100%;
+  color: $warning;
+  position: relative;
+  text-align: 'center';
+  top: 40vh;
+  display: block;
+}
+
+.fa-spin{
+  animation-duration: 0.50s;
+}
+
 @media (max-width: 992px) {
   .icon-prev, .icon-next{
     top: 50%;
@@ -123,20 +140,27 @@
   .btn{
     width: 100% !important;
   }
+
+  .loading{
+    top: 25vh;
+  }
 }
 </style>
 <script>
 import jquery from 'jquery'
-import { faTimesCircle, faChevronCircleRight, faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons'
+import { faTimesCircle, faChevronCircleRight, faChevronCircleLeft, faCircleNotch } from '@fortawesome/free-solid-svg-icons'
 export default {
   mounted(){
+    this.onLoaded()
   },
   data(){
     return {
       activeIndex: 0,
       faTimesCircle: faTimesCircle,
       faChevronLeft: faChevronCircleLeft,
-      faChevronRight: faChevronCircleRight
+      faChevronRight: faChevronCircleRight,
+      loading: true,
+      faCircleNotch: faCircleNotch
     }
   },
   props: ['propStyle', 'data', 'customId'],
@@ -150,7 +174,6 @@ export default {
     getHeight(){
       let height = jquery(window).height()
       let width = jquery(window).width()
-      console.log(height + '/' + width)
       if(width > height){
         let iHeight = parseInt(height - (height * .05))
         return {
@@ -169,11 +192,31 @@ export default {
         }
       }
     },
+    setLoading(params){
+      jquery('.loading').css({
+        display: params
+      })
+    },
     setNext(){
       this.activeIndex++
+      this.onLoaded()
     },
     setPrev(){
       this.activeIndex--
+      this.onLoaded()
+    },
+    onLoaded(){
+      this.setLoading('block')
+      jquery('#image-view').on('load', function(){
+        jquery('.loading').css({
+          display: 'none'
+        })
+      })
+      jquery('#image-view').on('error', function(){
+        jquery('.loading').css({
+          display: 'block'
+        })
+      })
     },
     redirectExternal(link){
       window.open(link, '_BLANK')
