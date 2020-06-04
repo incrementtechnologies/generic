@@ -1,10 +1,10 @@
 <template>
   <div class="img-modal" v-if="data.length > 0" :id="customId">
-    <div class="img-holder" :style="propStyle">
+    <div class="img-holder" :style="getHeight()">
       <font-awesome-icon :icon="faTimesCircle" class="close-icon icon" @click="close()"></font-awesome-icon>
       <font-awesome-icon :icon="faChevronLeft" class="icon-prev icon" @click="setPrev()" v-if="activeIndex > 0"></font-awesome-icon>
       <font-awesome-icon :icon="faChevronRight" class="icon-next icon" @click="setNext()" v-if="activeIndex < (data.length - 1)"></font-awesome-icon>
-      <img :src="data[activeIndex].url" class="image-viewer"/>
+      <img :src="data[activeIndex].url" class="image-viewer gallery-image-viewer"/>
       <div v-if="data[activeIndex].type === 'order_now'" class="actions">
         <span class="text">
           <label class="title pull-left">
@@ -24,35 +24,43 @@
   width: 100%;
   position: fixed;
   z-index: 100000;
+  top: 0px;
   background: rgba(0, 0, 0, 0.7);
 }
 
 .img-holder{
   text-align: center;
-  margin: auto;
-  margin-top: 0px;
-  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  position: absolute;
 }
 
-img{
+.gallery-image-viewer{
   width: 100%;
-  height: auto;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .close-icon{
   font-size: 42px;
   color: white;
-  top: 21px;
-  position: relative;
+  top: -15px;
+  position: absolute;
   right: -21px;
   float: right;
+  z-index: 100001;
 }
 
 .icon-prev, .icon-next{
   font-size: 42px;
   color: white;
-  top: 50vh;
+  top: 45vh;
   position: absolute;
+  z-index: 100001;
 }
 
 .icon-prev{
@@ -99,13 +107,6 @@ img{
 }
 
 @media (max-width: 992px) {
-  .img-holder{
-    width: 90% !important;
-    margin-left: 5% !important;
-    margin-right: 5% !important;
-    margin-top: 100px;
-  }
-
   .icon-prev, .icon-next{
     top: 50%;
   }
@@ -125,7 +126,7 @@ img{
 }
 </style>
 <script>
-import $ from 'jquery'
+import jquery from 'jquery'
 import { faTimesCircle, faChevronCircleRight, faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons'
 export default {
   mounted(){
@@ -142,9 +143,31 @@ export default {
   methods: {
     close(){
       this.activeIndex = 0
-      $('#' + this.customId).css({
+      jquery('#' + this.customId).css({
         display: 'none'
       })
+    },
+    getHeight(){
+      let height = jquery(window).height()
+      let width = jquery(window).width()
+      console.log(height + '/' + width)
+      if(width > height){
+        let iHeight = parseInt(height - (height * .05))
+        return {
+          height: iHeight + 'px !important',
+          width: iHeight + 'px !important',
+          top: parseInt(height - (height * .975)) + 'px !important',
+          left: parseInt((width - iHeight) / 2) + 'px'
+        }
+      }else{
+        let iWidth = parseInt(width - (width * .1))
+        return {
+          height: iWidth + 'px !important',
+          width: iWidth + 'px !important',
+          left: parseInt(width * .05) + 'px !important',
+          top: parseInt((height - iWidth) / 2) + 'px'
+        }
+      }
     },
     setNext(){
       this.activeIndex++
@@ -157,7 +180,7 @@ export default {
     },
     setImage(index){
       this.activeIndex = index
-      $('#' + this.customId).css({
+      jquery('#' + this.customId).css({
         display: 'block'
       })
     }
