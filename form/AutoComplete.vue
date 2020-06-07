@@ -1,6 +1,6 @@
 <template>
   <div class="input-holder-autocomplete">
-    <div class="holder">
+    <div class="autocomplete-holder">
       <label>{{label}}</label>
       <input type="text"
       v-bind:value="input"
@@ -21,13 +21,14 @@
   position: relative;
 }
 
-.holder{
+.autocomplete-holder{
   border: solid 1px #eee;
   border-radius: 5px;
   padding: 5px;
   min-height: 50px;
   overflow-y: hidden;
   max-height: 60px;
+  position: relative;
 }
 
 label{
@@ -61,6 +62,7 @@ ul{
   padding: 0px;
   background: white;
   padding: 5px;
+  z-index: 10000;
 }
 
 ul li{
