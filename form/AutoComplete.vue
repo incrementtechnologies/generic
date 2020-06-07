@@ -106,6 +106,7 @@ export default {
     },
     onSelect(title){
       this.input = title
+      this.$emit('input', this.input)
       this.sorted = []
     }
   }
