@@ -175,19 +175,19 @@ export default {
       let height = jquery(window).height()
       let width = jquery(window).width()
       if(width > height){
-        let iHeight = parseInt(height - (height * .05))
+        let iHeight = parseInt(height - (height * 0.05))
         return {
           height: iHeight + 'px !important',
           width: iHeight + 'px !important',
-          top: parseInt(height - (height * .975)) + 'px !important',
+          top: parseInt(height - (height * 0.975)) + 'px !important',
           left: parseInt((width - iHeight) / 2) + 'px'
         }
       }else{
-        let iWidth = parseInt(width - (width * .1))
+        let iWidth = parseInt(width - (width * 0.1))
         return {
           height: iWidth + 'px !important',
           width: iWidth + 'px !important',
-          left: parseInt(width * .05) + 'px !important',
+          left: parseInt(width * 0.05) + 'px !important',
           top: parseInt((height - iWidth) / 2) + 'px'
         }
       }
