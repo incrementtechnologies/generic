@@ -58,7 +58,7 @@ export default {
   mounted() {
     this.map = new window.google.maps.Map(this.$refs['map'], {
       center: { lat: Number(this.place_data[0].latitude), lng: Number(this.place_data[0].longitude) },
-      zoom: 11
+      zoom: 15
     })
     this.place_data.forEach(el => {
       var infowindow = new window.google.maps.InfoWindow({
@@ -68,7 +68,7 @@ export default {
         position: { lat: Number(el.latitude), lng: Number(el.longitude) },
         map: this.map,
         icon: {
-          url: `http://maps.google.com/mapfiles/ms/icons/red-dot.png`
+          url: `https://maps.google.com/mapfiles/ms/icons/red-dot.png`
         }
       })
       marker.addListener('click', function() {

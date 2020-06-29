@@ -774,6 +774,7 @@ export default {
     display(){
     },
     initPusher(){
+      console.log('hi')
       if(CONFIG.PUSHER.flag === 'pusher'){
         window.Echo = new Echo({
           broadcaster: 'pusher',
@@ -792,7 +793,7 @@ export default {
         })
       }
       window.Echo.channel(COMMON.pusher.channel)
-      .listen('Call', e => {
+      .listen('call', e => {
         console.log(e)
       })
       .listen(COMMON.pusher.notifications, e => {
