@@ -111,7 +111,7 @@ export default {
       config: CONFIG,
       data: null,
       email: null,
-      message: 'I\'d like to invite you on ' + COMMON.APP_NAME + COMMON.referral.emailMessage,
+      message: 'I\'d like to invite you to ' + COMMON.APP_NAME + COMMON.referral.emailMessage,
       successMessage: null,
       errorMessage: null,
       common: COMMON
