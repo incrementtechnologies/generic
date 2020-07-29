@@ -165,7 +165,6 @@ export default {
         return false
       }else{
         this.file = files[0]
-        console.log(this.file)
         this.createFile(files[0])
       }
     },
