@@ -15,6 +15,9 @@
               <!-- <i class="fa fa-search" @click="search()"></i> -->
             </span>
             <span class="settings">
+              <p v-if="errorMessage !== null" class="text-danger" style="margin-top: 10px;">
+                <b>Opps!</b> {{errorMessage}}
+              </p>
               <span class="image-holder" style="text-align: center;" @click="addImage()">
                 <i class="fa fa-plus" style="font-size: 60px; line-height: 200px;"></i>
                 <input type="file" id="Image" accept="image/*" @change="setUpFileUpload($event)">
@@ -144,6 +147,7 @@ export default {
       data: null,
       prevIndex: null,
       loadingFlag: false,
+      errorMessage: null,
       file: null
     }
   },
@@ -170,6 +174,11 @@ export default {
       this.upload()
     },
     upload(){
+      if(parseInt(this.file.size / 1024) > 1024){
+        this.errorMessage = 'Allowed size is up to 1 MB only'
+        this.file = null
+        return
+      }
       let formData = new FormData()
       formData.append('file', this.file)
       formData.append('file_url', this.file.name)
@@ -194,7 +203,10 @@ export default {
             value: this.user.userID,
             column: 'account_id',
             clause: '='
-          }]
+          }],
+          sort: {
+            created_at: 'desc'
+          }
         }
       }else{
         parameter = {
@@ -202,7 +214,10 @@ export default {
             value: this.user.userID,
             column: 'account_id',
             clause: '='
-          }]
+          }],
+          sort: {
+            created_at: 'desc'
+          }
         }
       }
       this.loadingFlag = true

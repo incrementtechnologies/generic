@@ -160,6 +160,8 @@
   float: left;
   width: 86%;
   margin-left: 4%;
+  margin-top: 0px;
+  margin-bottom: 0px;
   line-height: 40px;
 }
 
