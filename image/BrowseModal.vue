@@ -165,6 +165,7 @@ export default {
         return false
       }else{
         this.file = files[0]
+        console.log(this.file)
         this.createFile(files[0])
       }
     },
@@ -198,7 +199,7 @@ export default {
           condition: [{
             value: '%' + this.searchValue + '%',
             column: 'url',
-            clause: '='
+            clause: 'like'
           }, {
             value: this.user.userID,
             column: 'account_id',
