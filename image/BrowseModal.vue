@@ -18,17 +18,20 @@
               <p v-if="errorMessage !== null" class="text-danger" style="margin-top: 10px;">
                 <b>Opps!</b> {{errorMessage}}
               </p>
-              <span class="image-holder" style="text-align: center;" @click="addImage()">
-                <i class="fa fa-plus" style="font-size: 60px; line-height: 200px;"></i>
-                <input type="file" id="Image" accept="image/*" @change="setUpFileUpload($event)">
-              </span>
-              <span v-bind:class="{'active-image': item.active === true}" class="image-holder" v-for="item, index in data" @click="select(index)" v-if="data !== null">
-                <img :src="config.BACKEND_URL + item.url">
-              </span>
+                <span class="image-holder" style="text-align: center;" @click="addImage()">
+                  <i class="fa fa-plus" style="font-size: 60px; line-height: 200px;"></i>
+                  <input type="file" id="Image" accept="image/*" @change="setUpFileUpload($event)">
+                </span>
+                <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="item, index in data" @click="select(index)" v-if="data !== null">
+                  <img :src="config.BACKEND_URL + item.url"/>
+                  <button type="button" class="btn btn-outline-danger" id="deleteBtn" v-if="item.active" @click="deleteImage(item.id)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </span>
             </span>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-danger" @click="close()">Cancel</button>
+            <button class="btn btn-secondary" @click="close()">Cancel</button>
             <button class="btn btn-primary" @click="apply()">Apply</button>
           </div>
         </div>
@@ -40,6 +43,11 @@
 @import "~assets/style/colors.scss";
 .bg-primary{
   background: $primary !important; 
+}
+#deleteBtn{
+  position: absolute;
+  top: 8px;
+  right: 10px;
 }
 .item{
   width: 100%;
@@ -81,6 +89,7 @@
   cursor: pointer;
 }
 .image-holder{
+  position: relative;
   width: 200px;
   float: left;
   height: 200px;
@@ -129,6 +138,7 @@
   float: left;
   line-height: 50px;
 }
+
 </style>
 <script>
 import ROUTER from 'src/router'
@@ -198,7 +208,7 @@ export default {
           condition: [{
             value: '%' + this.searchValue + '%',
             column: 'url',
-            clause: 'like'
+            clause: '='
           }, {
             value: this.user.userID,
             column: 'account_id',
@@ -251,6 +261,15 @@ export default {
     close(){
       this.prevIndex = null
       $('#browseImagesModal').modal('hide')
+    },
+    deleteImage(id){
+      let params = {
+        id: id
+      }
+      axios.post(this.config.BACKEND_URL + '/images/delete', params).then(response => {
+        console.log(response)
+        this.search()
+      })
     }
   }
 }
