@@ -22,7 +22,7 @@
                   <i class="fa fa-plus" style="font-size: 60px; line-height: 200px;"></i>
                   <input type="file" id="Image" accept="image/*" @change="setUpFileUpload($event)">
                 </span>
-                <span v-bind:class="[ item.active ? 'active-image' : ' ']" class="image-holder" v-for="item, index in data" @click="select(index)" v-if="data !== null">
+                <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="item, index in data" @click="select(index)" v-if="data !== null">
                   <img :src="config.BACKEND_URL + item.url"/>
                   <button type="button" class="btn btn-danger" id="deleteBtn" data-toggle="modal" data-target="#confirm-delete" v-if="item.active" @click="selectDeleteImage(item.id)">
                     <i class="fa fa-times"></i>
