@@ -220,7 +220,7 @@ export default {
       }
       let formData = new FormData()
       formData.append('file', this.file)
-      formData.append('file_url', this.file.name)
+      formData.append('file_url', this.file.name.replace(' ', '_'))
       formData.append('account_id', this.user.userID)
       $('#loading').css({'display': 'block'})
       axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
