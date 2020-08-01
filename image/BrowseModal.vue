@@ -20,7 +20,7 @@
               </p>
               <span class="image-holder" style="text-align: center;" @click="addImage()">
                 <i class="fa fa-plus" style="font-size: 60px; line-height: 200px;"></i>
-                <input type="file" id="Image" accept="video/*" @change="setUpFileUpload($event)">
+                <input type="file" id="Image" accept="video/*, image/*" @change="setUpFileUpload($event)">
               </span>
               <span v-bind:class="{'active-image': item.active === true}" class="image-holder" v-for="item, index in data" @click="select(index)" v-if="data !== null">
                 <img :src="config.BACKEND_URL + item.url" v-if="$parent.getFileType(config.BACKEND_URL + item.url) === 'img'">
@@ -142,7 +142,7 @@ import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import axios from 'axios'
-import hbjs from 'handbrake-js'
+// import hbjs from 'handbrake-js'
 export default {
   mounted(){
     this.search()
@@ -161,25 +161,26 @@ export default {
   },
   props: ['customId'],
   methods: {
-    convert(vidfile){
-      console.log('sulod')
-      console.log(vidfile)
-      hbjs.spawn({ input: vidfile.url, output: vidfile.url.substring(0, vidfile.url.lastIndexOf('.')) + '.webm' })
-        .on('error', err => {
-          // invalid user input, no video found etc
-          console.log(err + 'not converted')
-        })
-        .on('progress', progress => {
-          console.log(
-            'Percent complete: %s, ETA: %s',
-            progress.percentComplete,
-            progress.eta
-          )
-        })
-        .on('end', salo =>
-          console.log(salo)
-        )
-    },
+    // convert(vidfile){
+    //   console.log('sulod')
+    //   console.log(vidfile)
+    //   let out = vidfile.url.substring(0, vidfile.url.lastIndexOf('.')) + '.webm'
+    //   hbjs.spawn({ input: vidfile.url, output: out })
+    //     .on('error', err => {
+    //       // invalid user input, no video found etc
+    //       console.log(err)
+    //     })
+    //     .on('progress', progress => {
+    //       console.log(
+    //         'Percent complete: %s, ETA: %s',
+    //         progress.percentComplete,
+    //         progress.eta
+    //       )
+    //     })
+    //     .on('end', salo =>
+    //       console.log(salo)
+    //     )
+    // },
     redirect(parameter){
       ROUTER.push(parameter)
     },
@@ -216,7 +217,7 @@ export default {
         // console.log(response)
         if(response.data.data !== null){
           this.search()
-          this.retrieveVideo(response.data.data)
+          // this.retrieveVideo(response.data.data)
         }
       })
     },
@@ -280,7 +281,7 @@ export default {
       this.APIRequest('images/retrieve', parameter).done(response => {
         this.loadingFlag = false
         if(response.data.length > 0){
-          this.convert(response.data)
+          this.convert(response.data[0])
         }else{
           console.log('hatdog')
         }
