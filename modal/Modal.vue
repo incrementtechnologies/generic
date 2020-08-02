@@ -376,7 +376,7 @@ export default {
             this.parameter[item.variable] = item.value
           }else if(item.validation.type === 'text'){
             if(item.value === null && item.required){
-              this.errorMessage = item.label + ' is required'
+              this.errorMessage = 'Fields with (*) are required'
               return false
             }else if(item.value !== null && item.validation.size > item.value.length){
               this.errorMessage = item.label + ' must be greater than equal to ' + item.validation.size
@@ -386,7 +386,7 @@ export default {
             }
           }else if(item.validation.type === 'date' || item.validation.type === 'datetime-local'){
             if(item.value === null && item.required){
-              this.errorMessage = item.label + ' is required'
+              this.errorMessage = 'Fields with (*) are required'
               return false
             }else if(moment(item.value).isValid() === false){
               this.errorMessage = item.label + ' is invalid'
@@ -396,7 +396,7 @@ export default {
             }
           }else if(item.validation.type === 'time'){
             if(item.value === null){
-              this.errorMessage = item.label + ' is required'
+              this.errorMessage = 'Fields with (*) are required'
               return false
             }else{
               this.parameter[item.variable] = item.value
@@ -452,23 +452,65 @@ export default {
         this.parameter[item.variable] = item.value
       }
     },
+    dateFormatter(date){
+      let d = new Date(date)
+      let month = '' + (d.getMonth() + 1)
+      let day = '' + d.getDate()
+      let year = d.getFullYear()
+
+      if(month.length < 2){
+        month = '0' + month
+      }
+      if(day.length < 2){
+        day = '0' + day
+      }
+      return [year, month, day].join('-')
+    },
     submit(){
       $('#loading').css({display: 'block'})
       if(this.validate()){
         this.addParams()
-        this.APIRequest(this.property.route, this.parameter).then(response => {
-          $('#loading').css({display: 'none'})
-          if(response.data !== null){
-            this.errorMessage = null
-            this.hideModal()
+        let date = new Date(Date.now())
+        console.log(this.dateFormatter(date))
+        console.log('route', this.property.route)
+        if(this.property.route === 'symptoms/create'){
+          console.log(true)
+          if(this.dateFormatter(date) < this.parameter.date){
+            alert('Date is Advance')
             this.$parent.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
-          }else if(response.error !== null){
-            for(let key of Object.keys(response.error.message)){
-              this.errorMessage = response.error.message[key][0]
-              break
-            }
+          }else{
+            console.log(false)
+            this.APIRequest(this.property.route, this.parameter).then(response => {
+              $('#loading').css({display: 'none'})
+              if(response.data !== null){
+                this.errorMessage = null
+                this.hideModal()
+                this.$parent.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+              }else if(response.error !== null){
+                for(let key of Object.keys(response.error.message)){
+                  response.error.message[key][0] = 'Fields with (*) are required'
+                  this.errorMessage = response.error.message[key][0]
+                  break
+                }
+              }
+            })
           }
-        })
+        }else{
+          console.log(false)
+          this.APIRequest(this.property.route, this.parameter).then(response => {
+            $('#loading').css({display: 'none'})
+            if(response.data !== null){
+              this.errorMessage = null
+              this.hideModal()
+              this.$parent.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+            }else if(response.error !== null){
+              for(let key of Object.keys(response.error.message)){
+                this.errorMessage = response.error.message[key][0]
+                break
+              }
+            }
+          })
+        }
       }else{
         $('#loading').css({display: 'none'})
       }
