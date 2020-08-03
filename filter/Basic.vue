@@ -1,11 +1,8 @@
 <template>
   <div class="filter">
     <div class="input-group">
-      <select class="btn btn-primary select-btn dropdown" v-model="filterValue" @change="selectCategory">
-        <option class="dropdown-title" v-for="(item, index) in category" :value="index" :key="index">
-          {{item.title}}
-        </option>
-      </select>
+      <button class="btn btn-primary select-btn text-left">Sort by
+      </button>
       <select class="btn btn-warning select-btn dropdown" v-model="sortValue" @change="changeSort" v-if="activeSort !== null">
         <option class="dropdown-title" v-for="(item, index) in activeSort" :value="index" :key="index">
           {{item.title}}
