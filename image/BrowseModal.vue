@@ -20,13 +20,14 @@
               </p>
               <span class="image-holder" style="text-align: center;" @click="addImage()">
                 <i class="fa fa-photo-video" style="font-size: 60px; line-height: 200px;"></i>
-                <input type="file" id="Image" accept="video/*, image/*" @change="setUpFileUpload($event)">
+                <input type="file" v-if="fileUpload !== null && fileUpload !== undefined" id="Image" :accept="fileUpload" @change="setUpFileUpload($event)">
+                <input v-else type="file" id="Image" accept="image/*" @change="setUpFileUpload($event)">
               </span>
               <span v-bind:class="{'active-image': item.active === true}" class="image-holder" v-for="item, index in data" @click="select(index)" v-if="data !== null">
-                <img :src="config.BACKEND_URL + item.url" v-if="$parent.getFileType(config.BACKEND_URL + item.url) === 'img'">
+                <img :src="config.BACKEND_URL + item.url" v-if="getFileType(config.BACKEND_URL + item.url) === 'img'">
                 <b-embed
                 type="iframe"
-                v-else-if="$parent.getFileType(config.BACKEND_URL + item.url) === 'vid'"
+                v-else-if="getFileType(config.BACKEND_URL + item.url) === 'vid'"
                 aspect="16by9"
                 :src="config.BACKEND_URL + item.url"
                 allowfullscreen
@@ -176,6 +177,7 @@
 import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
+import COMMON from 'src/common.js'
 import axios from 'axios'
 // import hbjs from 'handbrake-js'
 export default {
@@ -192,11 +194,16 @@ export default {
       prevIndex: null,
       loadingFlag: false,
       errorMessage: null,
-      file: null
+      file: null,
+      common: COMMON
     }
   },
-  props: ['customId'],
+  props: ['customId', 'fileUpload'],
   methods: {
+    getFileType(url){
+      console.log(url.substring(url.lastIndexOf('.')))
+      return url.substring(url.lastIndexOf('.')) === '.webm' ? 'vid' : 'img'
+    },
     // convert(vidfile){
     //   console.log('sulod')
     //   console.log(vidfile)
@@ -238,8 +245,8 @@ export default {
       this.upload()
     },
     upload(){
-      if(parseInt(this.file.size / 1024) > 1024){
-        this.errorMessage = 'Allowed size is up to 1 MB only'
+      if(parseInt(this.file.size / 512) > 512){
+        this.errorMessage = 'Allowed size is up to 512 KB only'
         this.file = null
         return
       }
