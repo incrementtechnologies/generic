@@ -161,7 +161,7 @@ export default {
           }else{
             // error message here
             this.successMessage = null
-            this.errorMessage = response.error
+            this.errorMessage = 'Invitation not sent. Try Again!'
             $('#loading').css({display: 'none'})
           }
         })
