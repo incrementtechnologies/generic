@@ -189,7 +189,7 @@ export default {
           condition: [{
             value: '%' + this.searchValue + '%',
             column: 'url',
-            clause: '='
+            clause: 'like'
           }, {
             value: this.user.userID,
             column: 'account_id',
