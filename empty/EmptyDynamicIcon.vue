@@ -1,7 +1,7 @@
 <template>
   <div class="empty">
     <i v-bind:class="icon + ' ' + iconColor" class=""></i>
-    <span class="description text-danger"><b>{{title}}</b></span>
+    <span class="description" :class="iconColor"><b>{{title}}</b></span>
     <span style="font-size: 15px;">{{action}}</span>
   </div>
 </template>
