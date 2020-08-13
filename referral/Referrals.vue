@@ -102,8 +102,14 @@ import CONFIG from 'src/config.js'
 import COMMON from 'src/common.js'
 export default {
   mounted(){
-    AUTH.checkPlan()
-    this.retrieve()
+    let data = JSON.parse(localStorage.getItem('invitations/' + this.user.code))
+    if(data){
+      this.data = data.data
+      this.retrieve(false)
+    }else{
+      this.data = null
+      this.retrieve(true)
+    }
   },
   data(){
     return {
@@ -124,7 +130,7 @@ export default {
     redirect(parameter){
       ROUTER.push(parameter)
     },
-    retrieve(){
+    retrieve(flag){
       let parameter = {
         condition: [{
           value: this.user.userID,
@@ -132,11 +138,12 @@ export default {
           clause: '='
         }]
       }
-      $('#loading').css({display: 'block'})
+      $('#loading').css({display: flag ? 'block' : 'none'})
       this.APIRequest('invitations/retrieve', parameter).then(response => {
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
+          localStorage.setItem('invitations/' + this.user.code, JSON.stringify(response))
         }else{
           this.data = null
         }
