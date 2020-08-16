@@ -295,7 +295,7 @@
     float: left;
   }
   .main-sidebar ul{
-    background: #15264f;
+    background: $secondary;
     width: 60%;
     min-height: 400px;
     height: 100vh;
