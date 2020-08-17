@@ -125,6 +125,7 @@ padding-top: 15px;
   background: #22b173 !important;
   color: #fff !important;
 }
+
 .modal{
   color: black !important;
 }
@@ -186,11 +187,10 @@ export default {
   methods: {
     show(){
       $('#authenticateOTP').modal('show')
-      this.generateOTP()
     },
     hideModal(){
-      this.initOtp()
       $('#authenticateOTP').modal('hide')
+      this.initOtp()
     },
     redirect(parameter){
       ROUTER.push(parameter)
