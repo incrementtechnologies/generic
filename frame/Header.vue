@@ -797,7 +797,6 @@ export default {
         console.log(e)
       })
       .listen(COMMON.pusher.notifications, e => {
-        console.log(e)
         AUTH.addNotification(e.data)
       })
       .listen(COMMON.pusher.messages, e => {
