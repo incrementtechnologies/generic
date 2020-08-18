@@ -11,7 +11,7 @@
         <div class="modal-body">
           <!-- Step 1 inputs -->
           <span v-if="errorMessage !== null" class="text-danger text-center">
-              <label style="width: 100%;"><b>Opps! </b>{{errorMessage}}</label>
+              <label style="width: 100%;"><b>Oops! </b>{{errorMessage}}</label>
           </span>
           <span v-if="successMessage !== null" class="text-primary text-center incre-row" >
             <i class="fa fa-check text-primary" style="font-size: 75px"></i>
@@ -125,6 +125,7 @@ padding-top: 15px;
   background: #22b173 !important;
   color: #fff !important;
 }
+
 .modal{
   color: black !important;
 }
@@ -185,11 +186,11 @@ export default {
   },
   methods: {
     show(){
-      this.generateOTP()
+      $('#authenticateOTP').modal('show')
     },
     hideModal(){
-      this.initOtp()
       $('#authenticateOTP').modal('hide')
+      this.initOtp()
     },
     redirect(parameter){
       ROUTER.push(parameter)
