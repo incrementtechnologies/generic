@@ -68,6 +68,21 @@
               :input-attr="{style: 'min-height: 50px !important;'}"
             ></date-picker>
 
+            <!-- DateTime with limit -->
+            <date-picker
+              v-if="item.type === 'dateLimit'"
+              v-model="item.value"
+              :disabled-date="disabledDates"
+              :type="'date'"
+              :value-type="'YYYY-MM-DD'"
+              :use12h="true"
+              :id="item.id"
+              :placeholder="item.placeholder"
+              :format="'MMM D, YYYY'"
+              :input-class="'form-control'"
+              :input-attr="{style: 'min-height: 50px !important;'}"
+            ></date-picker>
+
             <!-- DateTime Tag -->
             <date-picker
               v-if="item.type === 'datetime'"
@@ -208,6 +223,9 @@ export default {
     DatePicker
   },
   methods: {
+    disabledDates(date) {
+      return date > new Date()
+    },
     hideModal(){
       $('#' + this.property.id).modal('hide')
     },
