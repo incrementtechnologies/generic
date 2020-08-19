@@ -513,6 +513,11 @@ export default {
               }
             })
           }
+        }else if(this.property.route === 'return'){
+          this.errorMessage = null
+          this.hideModal()
+          this.$parent.retrieveModalValue(this.parameter)
+          $('#loading').css({display: 'none'})
         }else{
           console.log(false)
           this.APIRequest(this.property.route, this.parameter).then(response => {
