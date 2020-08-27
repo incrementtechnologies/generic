@@ -235,6 +235,7 @@ export default {
       this.prevIndex = null
     },
     filterImage() {
+      if (this.data === null || this.filteredData === null) return
       const _data = [...this.data]
       this.filteredData = _data.filter(image => image.url.toLowerCase().indexOf(this.searchValue) > -1)
     },
