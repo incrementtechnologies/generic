@@ -173,12 +173,12 @@ export default {
             console.log(this.successMessage)
           }else{
             // error message here
-            this.successMessage = null
-            if(response.error.status === 100) {
-              this.errorMessage = 'Invitation not sent!'
-            } else {
+            if(response.error.status === 100){
+              this.errorMessage = 'Invitation not sent. Try Again!'
+            }else{
               this.errorMessage = response.error
             }
+            this.errorMessage = 'Invitation not sent. Try Again!'
             $('#loading').css({display: 'none'})
           }
         })

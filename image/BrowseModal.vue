@@ -11,8 +11,8 @@
           </div>
           <div class="modal-body">
             <span class="search">
-              <input type="text" class="form-control form-control-custom" v-model="searchValue" placeholder="Search something..." @keyup.enter="search()">
-              <!-- <i class="fa fa-search" @click="search()"></i> -->
+              <input type="text" class="form-control form-control-custom" v-model="searchValue" placeholder="Search something..." @keyup="filterImage()">
+              <!-- <i class="fa fa-search" @click="retrieve()"></i> -->
             </span>
             <span class="settings">
               <p v-if="errorMessage !== null" class="text-danger" style="margin-top: 10px;">
@@ -22,11 +22,13 @@
                   <i class="fa fa-plus" style="font-size: 60px; line-height: 200px;"></i>
                   <input type="file" id="Image" accept="image/*" @change="setUpFileUpload($event)">
                 </span>
-                <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="item, index in data" @click="select(index)" v-if="data !== null">
-                  <img :src="config.BACKEND_URL + item.url"/>
-                  <button type="button" class="btn btn-danger" id="deleteBtn" data-toggle="modal" data-target="#confirm-delete" v-if="item.active" @click="selectDeleteImage(item.id)">
-                    <i class="fa fa-times"></i>
-                  </button>
+                <span v-if="data !== null">
+                  <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="(item, index) in filteredData" v-bind:key="index" @click="select(index)">
+                    <img :src="config.BACKEND_URL + item.url"/>
+                    <button type="button" class="btn btn-danger" id="deleteBtn" data-toggle="modal" data-target="#confirm-delete" v-if="item.active" @click="selectDeleteImage(item.id)">
+                      <i class="fa fa-times"></i>
+                    </button>
+                  </span>
                 </span>
             </span>
           </div>
@@ -175,7 +177,7 @@ import CONFIG from 'src/config.js'
 import axios from 'axios'
 export default {
   mounted(){
-    this.search()
+    this.retrieve()
   },
   data(){
     return {
@@ -184,6 +186,7 @@ export default {
       config: CONFIG,
       searchValue: null,
       data: null,
+      filteredData: null,
       prevIndex: null,
       loadingFlag: false,
       errorMessage: null,
@@ -226,38 +229,25 @@ export default {
       axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.data !== null){
-          this.search()
+          this.retrieve()
         }
       })
       this.prevIndex = null
     },
-    search(){
-      let parameter = null
-      if(this.searchValue !== null && this.searchValue !== ''){
-        parameter = {
-          condition: [{
-            value: '%' + this.searchValue + '%',
-            column: 'url',
-            clause: 'like'
-          }, {
-            value: this.user.userID,
-            column: 'account_id',
-            clause: '='
-          }],
-          sort: {
-            created_at: 'desc'
-          }
-        }
-      }else{
-        parameter = {
-          condition: [{
-            value: this.user.userID,
-            column: 'account_id',
-            clause: '='
-          }],
-          sort: {
-            created_at: 'desc'
-          }
+    filterImage() {
+      if (this.data === null || this.filteredData === null) return
+      const _data = [...this.data]
+      this.filteredData = _data.filter(image => image.url.toLowerCase().indexOf(this.searchValue) > -1)
+    },
+    retrieve(){
+      const parameter = {
+        condition: [{
+          value: this.user.userID,
+          column: 'account_id',
+          clause: '='
+        }],
+        sort: {
+          created_at: 'desc'
         }
       }
       this.loadingFlag = true
@@ -265,8 +255,10 @@ export default {
         this.loadingFlag = false
         if(response.data.length > 0){
           this.data = response.data
+          this.filteredData = response.data
         }else{
           this.data = null
+          this.filteredData = null
         }
       })
     },
@@ -309,8 +301,7 @@ export default {
         id: this.idImage
       }
       axios.post(this.config.BACKEND_URL + '/images/delete', params).then(response => {
-        console.log(response)
-        this.search()
+        this.retrieve()
       })
       this.prevIndex = null
       setTimeout(() => {
