@@ -1,6 +1,6 @@
 <template>
   <div class="modal fade" id="connectionError" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title text-primary" id="exampleModalLabel">{{title}}</h5>
@@ -9,11 +9,13 @@
           </button>
         </div>
         <div class="modal-body">
-            <label>{{message}}</label>
+            <label>{{message}}</label><br><br>
+
+            <p><b>{{confirm}}</b></p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" @click="hideModal()">No</button>
-          <button type="button" class="btn btn-primary" @click="onConfirm()">Yes</button>
+          <button type="button" class="btn btn-danger" @click="onConfirm()">Yes &nbsp;&nbsp;<i class="fas fa-trash"></i></button>
+          <button type="button" class="btn btn-primary" @click="hideModal()">No take me back</button>
         </div>
       </div>
     </div>
@@ -42,7 +44,7 @@ export default {
       id: null
     }
   },
-  props: ['title', 'message'],
+  props: ['title', 'message', 'confirm'],
   methods: {
     show(id){
       this.id = id
