@@ -162,6 +162,7 @@ export default {
         }
         $('#loading').css({display: 'block'})
         this.APIRequest('invitations/create', parameter).done(response => {
+          console.log('response', response)
           if(response.data > 0 && response.data !== null){
             // success message here
             this.email = null
@@ -169,6 +170,7 @@ export default {
             this.successMessage = 'Invitation Sent!'
             this.errorMessage = null
             this.retrieve()
+            console.log(this.successMessage)
           }else{
             // error message here
             if(response.error.status === 100){
