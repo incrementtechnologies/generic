@@ -24,6 +24,8 @@
             <!-- Error input validation -->
             <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input' || item.type === 'textarea') && item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)" style="float: left; width: 100%;"><b>Oops!</b> Length must be greater than equal {{item.validation.size}}.</label>
 
+            <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input' && item.inputType === 'password') && item.value !== null && item.validation.type === 'text' && (/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/.test(item.value) === false)" style="float: left; width: 100%;"><b>Oops!</b> Password must be alphanumeric characters. It should contain 1 number, 1 special character and 1 capital letter.</label>
+
             <label class="text-danger" v-bind:for="item.id" v-if="item.type === 'input' && item.value !== null && item.validation.type === 'email' && item.validation.flag === false" style="float: left; width: 100%;"><b>Oops!</b> Invalid email address.</label>
 
             <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input') && item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))" style="float: left; width: 100%;"><b>Oops!</b> Minimum value is {{item.validation.size}}.</label>
@@ -68,26 +70,26 @@
               :input-attr="{style: 'min-height: 50px !important;'}"
             ></date-picker>
 
-            <!-- DateTime with limit pastdates-->
-            <date-picker
-              v-if="item.type === 'PastDateLimit'"
-              v-model="item.value"
-              :disabled-date="disabledPastDates"
-              :type="'datetime'"
-              :value-type="'YYYY-MM-DD HH:mm:ss'"
-              :use12h="true"
-              :id="item.id"
-              :placeholder="item.placeholder"
-              :format="'MMM, D, YYYY hh:mm A'"
-              :input-class="'form-control'"
-              :input-attr="{style: 'min-height: 50px !important;'}"
-            ></date-picker>
-
-            <!-- DateTime with limit-->
+            <!-- DateTime with limit -->
             <date-picker
               v-if="item.type === 'dateLimit'"
               v-model="item.value"
               :disabled-date="disabledDates"
+              :type="'date'"
+              :value-type="'YYYY-MM-DD'"
+              :use12h="true"
+              :id="item.id"
+              :placeholder="item.placeholder"
+              :format="'MMM D, YYYY'"
+              :input-class="'form-control'"
+              :input-attr="{style: 'min-height: 50px !important;'}"
+            ></date-picker>
+
+            <!-- DateTime with limit from props -->
+            <date-picker
+              v-if="item.type === 'dateLimitFromProps'"
+              v-model="item.value"
+              :disabled-date="item.disabledDate"
               :type="'date'"
               :value-type="'YYYY-MM-DD'"
               :use12h="true"
@@ -112,6 +114,21 @@
               :input-attr="{style: 'min-height: 50px !important;'}"
             >
             </date-picker>
+
+            <!-- DateTime with limit pastdates-->
+            <date-picker
+              v-if="item.type === 'PastDateLimit'"
+              v-model="item.value"
+              :disabled-date="disabledPastDates"
+              :type="'datetime'"
+              :value-type="'YYYY-MM-DD HH:mm:ss'"
+              :use12h="true"
+              :id="item.id"
+              :placeholder="item.placeholder"
+              :format="'MMM, D, YYYY hh:mm A'"
+              :input-class="'form-control'"
+              :input-attr="{style: 'min-height: 50px !important;'}"
+            ></date-picker>
             
             <!-- Non-Concatenated Location Tag -->
             <google-autocomplete-location
