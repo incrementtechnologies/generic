@@ -114,6 +114,21 @@
               :input-attr="{style: 'min-height: 50px !important;'}"
             >
             </date-picker>
+
+            <!-- DateTime with limit pastdates-->
+            <date-picker
+              v-if="item.type === 'PastDateLimit'"
+              v-model="item.value"
+              :disabled-date="disabledPastDates"
+              :type="'datetime'"
+              :value-type="'YYYY-MM-DD HH:mm:ss'"
+              :use12h="true"
+              :id="item.id"
+              :placeholder="item.placeholder"
+              :format="'MMM, D, YYYY hh:mm A'"
+              :input-class="'form-control'"
+              :input-attr="{style: 'min-height: 50px !important;'}"
+            ></date-picker>
             
             <!-- Non-Concatenated Location Tag -->
             <google-autocomplete-location
@@ -240,6 +255,10 @@ export default {
     DatePicker
   },
   methods: {
+    disabledPastDates(date) {
+      var d = new Date()
+      return date < new Date(d.setDate(d.getDate() - 1))
+    },
     disabledDates(date) {
       return date > new Date()
     },
