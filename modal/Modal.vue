@@ -22,17 +22,18 @@
             </label>
 
             <!-- Error input validation -->
-            <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input' || item.type === 'textarea') && item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)" style="float: left; width: 100%;"><b>Oops!</b> Length must be greater than equal {{item.validation.size}}.</label>
+            <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input' || item.type === 'textarea') && item.title === 'Update Sub Account' && item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)" style="float: left; width: 100%;"><b>Oops!</b> Length must be greater than equal {{item.validation.size}}.</label>
 
-            <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input' && item.inputType === 'password') && item.value !== null && item.validation.type === 'text' && (/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/.test(item.value) === false)" style="float: left; width: 100%;"><b>Oops!</b> Password must be alphanumeric characters. It should contain 1 number, 1 special character and 1 capital letter.</label>
+            <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input' && item.id === 'password') && item.value !== '********' && item.value !== null && item.validation.type === 'text' && (/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/.test(item.value) === false)" style="float: left; width: 100%;"><b>Oops!</b> Password must be alphanumeric characters. It should contain 1 number, 1 special character and 1 capital letter.</label>
 
             <label class="text-danger" v-bind:for="item.id" v-if="item.type === 'input' && item.value !== null && item.validation.type === 'email' && item.validation.flag === false" style="float: left; width: 100%;"><b>Oops!</b> Invalid email address.</label>
 
             <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input') && item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))" style="float: left; width: 100%;"><b>Oops!</b> Minimum value is {{item.validation.size}}.</label>
 
             <!-- Input Tag -->
+            <div class = "input-group">
             <input 
-              v-bind:type="item.inputType" 
+              v-bind:type="item.inputType === visibility ? visibility : item.inputType" 
               class="form-control" 
               v-model="item.value" 
               v-if="item.type === 'input'" 
@@ -41,6 +42,11 @@
               v-bind:placeholder="item.placeholder" 
               v-bind:class="{'invalid-inputs': (item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))) || (item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)) || (item.value !== null && item.validation.type === 'email' && item.validation.flag === false)}" 
               @keyup="validateTyping(item)" :disabled="item.disabled === true">
+              <span class="input-group-addons" v-if="item.id === 'password' && item.value !== '********'">
+                <i v-if="visibility === 'password'" @click="showPassword(item)" class="fa fa-eye" aria-hidden="true"></i>
+                <i v-if="visibility === 'text'" @click="hidePassword(item)" class="fa fa-eye-slash" aria-hidden="true"></i>
+              </span>
+            </div>
 
             <!-- Time Tag -->
             <date-picker
@@ -206,6 +212,21 @@
   position: unset;
   display: unset;
 }
+.input-group-addons{
+  width: 100px;
+  text-align: center !important;
+  padding: 0px !important;
+  display: block !important;
+  line-height: 43px !important;
+  border-radius: 3px;
+  border: solid 1px;
+  border-color: rgba(0,0,0,.15);
+  border-left-style: none;
+}
+.input-group{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
 </style>
 <script>
 import ROUTER from 'src/router'
@@ -246,7 +267,8 @@ export default {
           firstDayOfWeek: 1
         },
         monthBeforeYear: false
-      }
+      },
+      visibility: 'password'
     }
   },
   props: ['property'],
@@ -255,6 +277,14 @@ export default {
     DatePicker
   },
   methods: {
+    showPassword(item) {
+      item.inputType = 'text'
+      this.visibility = 'text'
+    },
+    hidePassword(item) {
+      item.inputType = 'password'
+      this.visibility = 'password'
+    },
     disabledPastDates(date) {
       var d = new Date()
       return date < new Date(d.setDate(d.getDate() - 1))
@@ -435,7 +465,10 @@ export default {
             }else if(item.value !== null && item.validation.size > item.value.length){
               this.errorMessage = item.label + ' must be greater than equal to ' + item.validation.size
               return false
-            }else{
+            } else if(item.type === 'input' && item.inputType === 'password' && item.value !== null && item.validation.type === 'text' && (/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/.test(item.value) === false)) {
+              this.errorMessage = 'Password must be alphanumeric characters. It should contain 1 number, 1 special character and 1 capital letter.'
+              return false
+            } else{
               this.parameter[item.variable] = item.value
             }
           }else if(item.validation.type === 'date' || item.validation.type === 'datetime-local'){
