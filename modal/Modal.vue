@@ -22,9 +22,9 @@
             </label>
 
             <!-- Error input validation -->
-            <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input' || item.type === 'textarea') && item.title === 'Update Sub Account' && item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)" style="float: left; width: 100%;"><b>Oops!</b> Length must be greater than equal {{item.validation.size}}.</label>
+            <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input' || item.type === 'textarea') && item.value !== '********' && item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)" style="float: left; width: 100%;"><b>Oops!</b> Length must be greater than equal {{item.validation.size}}.</label>
 
-            <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input' && item.id === 'password') && item.title === 'Update Sub Account' && item.value !== null && item.validation.type === 'text' && (/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/.test(item.value) === false)" style="float: left; width: 100%;"><b>Oops!</b> Password must be alphanumeric characters. It should contain 1 number, 1 special character and 1 capital letter.</label>
+            <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input' && item.id === 'password') && item.value !== '********' && item.value !== null && item.validation.type === 'text' && (/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/.test(item.value) === false)" style="float: left; width: 100%;"><b>Oops!</b> Password must be alphanumeric characters. It should contain 1 number, 1 special character and 1 capital letter.</label>
 
             <label class="text-danger" v-bind:for="item.id" v-if="item.type === 'input' && item.value !== null && item.validation.type === 'email' && item.validation.flag === false" style="float: left; width: 100%;"><b>Oops!</b> Invalid email address.</label>
 
