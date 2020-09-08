@@ -1,5 +1,15 @@
 <template>
   <div class="img-modal" v-if="data.length > 0" :id="customId">
+    <div class="card"> 
+      <div class="card-body">
+        <h5 class="modal-title" color ="white">Important!<span class="close float-right badge" @click="closeCard" aria-hidden="true">&times;</span></h5>
+        <center><h5 class="card-title mt-4">Health and Safety Protocol</h5>
+        <br>
+        <button onclick="location.href='https://mezzohotel.com/press-room/page/Mezzo_Hotel_Health_and_Safety_Protocols';" class="btn btn-primary" style="float:none; width: 100% !important; height: 50% !important">Visit</button>
+        </center>
+      
+      </div>
+    </div>
     <div class="img-holder" :style="getHeight()">
       <font-awesome-icon :icon="faTimesCircle" class="close-icon icon" @click="close()"></font-awesome-icon>
       <font-awesome-icon :icon="faChevronLeft" class="icon-prev icon" @click="setPrev()" v-if="activeIndex > 0"></font-awesome-icon>
@@ -29,6 +39,26 @@
   z-index: 100000;
   top: 0px;
   background: rgba(0, 0, 0, 0.7);
+}
+
+.important {
+  font-size: 25px;
+}
+
+.close {
+  cursor: pointer;
+}
+
+.card {
+  z-index: 100000;
+  top: 60px;
+  right: 60px;
+  float:right;
+  display: block;
+  width: 18rem;
+  length: 336px;
+  background-color: #CBAB58;
+  color: white;
 }
 
 .img-holder{
@@ -165,6 +195,10 @@ export default {
   },
   props: ['propStyle', 'data', 'customId'],
   methods: {
+    closeCard() {
+      console.log('here')
+      jquery('.card').css('display', 'none')
+    },
     close(){
       this.activeIndex = 0
       jquery('#' + this.customId).css({
