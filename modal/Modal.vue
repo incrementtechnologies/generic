@@ -465,8 +465,9 @@ export default {
             }else if(item.value !== null && item.validation.size > item.value.length){
               this.errorMessage = item.label + ' must be greater than equal to ' + item.validation.size
               return false
-            } else if(item.type === 'input' && item.inputType === 'password' && item.value !== null && item.validation.type === 'text' && (/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/.test(item.value) === false)) {
+            } else if(item.value !== '********' && item.type === 'input' && item.inputType === 'password' && item.value !== null && item.validation.type === 'text' && (/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/.test(item.value) === false)) {
               this.errorMessage = 'Password must be alphanumeric characters. It should contain 1 number, 1 special character and 1 capital letter.'
+              console.log(item)
               return false
             } else{
               this.parameter[item.variable] = item.value
