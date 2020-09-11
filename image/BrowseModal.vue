@@ -300,7 +300,7 @@ export default {
       let params = {
         id: this.idImage
       }
-      axios.post(this.config.BACKEND_URL + '/images/delete', params).then(response => {
+      axios.post(this.config.BACKEND_URL + '/images/delete?token=' + AUTH.tokenData.token, params).then(response => {
         this.retrieve()
       })
       this.prevIndex = null
