@@ -4,7 +4,7 @@
       <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
           <div class="modal-header bg-primary">
-            <h5 class="modal-title" id="exampleModalLabel">Images</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Files</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="close()">
               <span aria-hidden="true" class="text-white">&times;</span>
             </button>
@@ -19,12 +19,17 @@
                 <b>Opps!</b> {{errorMessage}}
               </p>
                 <span class="image-holder" style="text-align: center;" @click="addImage()">
-                  <i class="fa fa-plus" style="font-size: 60px; line-height: 200px;"></i>
-                  <input type="file" id="Image" accept="image/*" @change="setUpFileUpload($event)">
+                  <i class="fa fa-plus" style="font-size: 60px; line-height: 150px;"></i>
+                  <p style="color:#bababa;font-size:20px;">Photo/Video</p>
+                  <input type="file" id="File" accept="video/*,image/*" @change="setUpFileUpload($event)">
                 </span>
                 <span v-if="data !== null">
                   <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="(item, index) in filteredData" v-bind:key="index" @click="select(index)">
-                    <img :src="config.BACKEND_URL + item.url"/>
+                    <!-- <img :src="config.BACKEND_URL + item.url"/> -->
+                    <img :src="config.BACKEND_URL + item.url" v-if="getFileType(config.BACKEND_URL + item.url) === 'img'">
+                    <video width="200" height="200" v-else-if="getFileType(config.BACKEND_URL + item.url) === 'vid'" controls>
+                      <source :src="config.BACKEND_URL + item.url" type="video/webm">
+                    </video>   
                     <button type="button" class="btn btn-danger" id="deleteBtn" data-toggle="modal" data-target="#confirm-delete" v-if="item.active" @click="selectDeleteImage(item.id)">
                       <i class="fa fa-times"></i>
                     </button>
@@ -129,6 +134,7 @@
   float: left;
 }
 
+
 .image-holder input{
   display: none;
   height: 200px;
@@ -195,11 +201,15 @@ export default {
   },
   props: ['customId'],
   methods: {
+    getFileType(url){
+      console.log(url.substring(url.lastIndexOf('.')))
+      return url.substring(url.lastIndexOf('.')) === '.webm' ? 'vid' : 'img'
+    },
     redirect(parameter){
       ROUTER.push(parameter)
     },
     addImage(){
-      $('#Image')[0].click()
+      $('#File')[0].click()
     },
     setUpFileUpload(event){
       let files = event.target.files || event.dataTransfer.files
