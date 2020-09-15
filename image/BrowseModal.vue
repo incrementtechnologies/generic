@@ -21,7 +21,7 @@
                 <span class="image-holder" style="text-align: center;" @click="addImage()">
                   <i class="fa fa-plus" style="font-size: 60px; line-height: 150px;"></i>
                   <p style="color:#bababa;font-size:20px;">Photo/Video</p>
-                  <input type="file" id="File" accept="video/*,image/*" @change="setUpFileUpload($event)">
+                  <input type="file" id="File" accept="video/webm,image/*" @change="setUpFileUpload($event)">
                 </span>
                 <span v-if="data !== null">
                   <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="(item, index) in filteredData" v-bind:key="index" @click="select(index)">
