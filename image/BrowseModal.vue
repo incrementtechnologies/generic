@@ -196,7 +196,8 @@ export default {
       prevIndex: null,
       loadingFlag: false,
       errorMessage: null,
-      file: null
+      file: null,
+      videoTime: null
     }
   },
   props: ['customId'],
@@ -223,7 +224,28 @@ export default {
     createFile(file){
       let fileReader = new FileReader()
       fileReader.readAsDataURL(event.target.files[0])
-      this.upload()
+      console.log(this.file.name.substring(this.file.name.lastIndexOf('.')))
+      if(this.file.name.substring(this.file.name.lastIndexOf('.')) === '.webm' || this.file.name.substring(this.file.name.lastIndexOf('.')) === '.png' || this.file.name.substring(this.file.name.lastIndexOf('.')) === '.jpg' || this.file.name.substring(this.file.name.lastIndexOf('.')) === '.jpeg' || this.file.name.substring(this.file.name.lastIndexOf('.')) === '.gif' || this.file.name.substring(this.file.name.lastIndexOf('.')) === '.tif' || this.file.name.substring(this.file.name.lastIndexOf('.')) === '.bmp'){
+        if(this.file.name.substring(this.file.name.lastIndexOf('.')) === '.webm'){
+          let vid = document.createElement('video')
+          let fileURL = URL.createObjectURL(this.file)
+          vid.src = fileURL
+          vid.ondurationchange = function() {
+            alert(this.duration)
+            this.videoTime = parseInt(this.duration)
+          }
+        }
+        this.upload()
+      }else{
+        if(this.videoTime > 5){
+          this.errorMessage = 'Video should be maximum of 5 secs only'
+        }else if(this.videoTime === 0){
+          this.errorMessage = 'File format is not acceptable!'
+        }
+        this.videoTime = null
+        this.file = null
+        return
+      }
     },
     upload(){
       if(parseInt(this.file.size / 1024) > 1024){
