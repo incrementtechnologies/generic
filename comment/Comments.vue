@@ -214,6 +214,32 @@
   float: left;
   height: 45px;
 }
+
+@media (max-width:992px) {
+  .post-item-comment .new-comment {
+    width: 98%;
+    float: right;
+    height: 95px;
+    margin-right: 2%;
+    margin-left: 2%;
+    line-height: 45px;
+  }
+  .new-comment input {
+    width: 85%;
+    float: left;
+    height: 45px;
+    margin-left: 3%;
+  }
+  .new-comment img {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    margin-right: 0px;
+    float: left;
+    margin-top: 5px;
+    margin-left: 0px;
+}
+}
 </style>
 <script>
 import ROUTER from '../../../../router'
