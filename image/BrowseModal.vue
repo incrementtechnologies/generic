@@ -29,6 +29,7 @@
                     <img :src="config.BACKEND_URL + item.url" v-if="getFileType(config.BACKEND_URL + item.url) === 'img'">
                     <video width="200" height="200" v-else-if="getFileType(config.BACKEND_URL + item.url) === 'vid'" controls>
                       <source :src="config.BACKEND_URL + item.url" type="video/webm">
+                      <source :src="config.BACKEND_URL + item.url" type="video/mp4">
                     </video>   
                     <button type="button" class="btn btn-danger" id="deleteBtn" data-toggle="modal" data-target="#confirm-delete" v-if="item.active" @click="selectDeleteImage(item.id)">
                       <i class="fa fa-times"></i>
