@@ -21,7 +21,7 @@
                 <span class="image-holder" style="text-align: center;" @click="addImage()">
                   <i class="fa fa-plus" style="font-size: 60px; line-height: 150px;"></i>
                   <p style="color:#bababa;font-size:20px;">Photo/Video</p>
-                  <input type="file" id="File" accept="video/webm,image/*" @change="setUpFileUpload($event)">
+                  <input type="file" id="File" accept="video/*,image/*" @change="setUpFileUpload($event)">
                 </span>
                 <span v-if="data !== null">
                   <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="(item, index) in filteredData" v-bind:key="index" @click="select(index)">
@@ -196,15 +196,15 @@ export default {
       prevIndex: null,
       loadingFlag: false,
       errorMessage: null,
-      file: null,
-      videoTime: null
+      file: null
     }
   },
   props: ['customId'],
   methods: {
     getFileType(url){
+      let url1 = url.toLowerCase()
       console.log(url.substring(url.lastIndexOf('.')))
-      return url.substring(url.lastIndexOf('.')) === '.webm' ? 'vid' : 'img'
+      return url1.substring(url1.lastIndexOf('.')) === '.webm' || url1.substring(url1.lastIndexOf('.')) === '.mp4' ? 'vid' : 'img'
     },
     redirect(parameter){
       ROUTER.push(parameter)
@@ -214,38 +214,26 @@ export default {
     },
     setUpFileUpload(event){
       let files = event.target.files || event.dataTransfer.files
+      let videoration = 0
       if(!files.length){
         return false
       }else{
         this.file = files[0]
-        this.createFile(files[0])
+        alert(this.file.name)
+        console.log(this.file.name.substring(this.file.name.lastIndexOf('.')))
+        let filename = this.file.name.toLowerCase()
+        if(filename.substring(filename.lastIndexOf('.')) === '.webm' || filename.substring(filename.lastIndexOf('.')) === '.mp4' || filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
+          this.createFile(files[0])
+        }else{
+          this.errorMessage = 'File format is not acceptable!'
+          this.file = null
+        }
       }
     },
     createFile(file){
       let fileReader = new FileReader()
       fileReader.readAsDataURL(event.target.files[0])
-      console.log(this.file.name.substring(this.file.name.lastIndexOf('.')))
-      if(this.file.name.substring(this.file.name.lastIndexOf('.')) === '.webm' || this.file.name.substring(this.file.name.lastIndexOf('.')) === '.png' || this.file.name.substring(this.file.name.lastIndexOf('.')) === '.jpg' || this.file.name.substring(this.file.name.lastIndexOf('.')) === '.jpeg' || this.file.name.substring(this.file.name.lastIndexOf('.')) === '.gif' || this.file.name.substring(this.file.name.lastIndexOf('.')) === '.tif' || this.file.name.substring(this.file.name.lastIndexOf('.')) === '.bmp'){
-        if(this.file.name.substring(this.file.name.lastIndexOf('.')) === '.webm'){
-          let vid = document.createElement('video')
-          let fileURL = URL.createObjectURL(this.file)
-          vid.src = fileURL
-          vid.ondurationchange = function() {
-            alert(this.duration)
-            this.videoTime = parseInt(this.duration)
-          }
-        }
-        this.upload()
-      }else{
-        if(this.videoTime > 5){
-          this.errorMessage = 'Video should be maximum of 5 secs only'
-        }else if(this.videoTime === 0){
-          this.errorMessage = 'File format is not acceptable!'
-        }
-        this.videoTime = null
-        this.file = null
-        return
-      }
+      this.upload()
     },
     upload(){
       if(parseInt(this.file.size / 1024) > 1024){
