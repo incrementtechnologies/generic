@@ -219,7 +219,7 @@ export default {
         return false
       }else{
         this.file = files[0]
-        alert(this.file.name)
+        console.log(this.file.name)
         console.log(this.file.name.substring(this.file.name.lastIndexOf('.')))
         let filename = this.file.name.toLowerCase()
         if(filename.substring(filename.lastIndexOf('.')) === '.webm' || filename.substring(filename.lastIndexOf('.')) === '.mp4' || filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
