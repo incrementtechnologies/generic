@@ -102,8 +102,18 @@ import CONFIG from 'src/config.js'
 import COMMON from 'src/common.js'
 export default {
   mounted(){
-    AUTH.checkPlan()
-    this.retrieve()
+    let data = JSON.parse(localStorage.getItem('invitations/' + this.user.code))
+    if(data){
+      if(data.data.length > 0){
+        this.data = data.data
+      }else{
+        this.data = null
+      }
+      this.retrieve(false)
+    }else{
+      this.data = null
+      this.retrieve(true)
+    }
   },
   data(){
     return {
@@ -124,7 +134,7 @@ export default {
     redirect(parameter){
       ROUTER.push(parameter)
     },
-    retrieve(){
+    retrieve(flag){
       let parameter = {
         condition: [{
           value: this.user.userID,
@@ -132,9 +142,10 @@ export default {
           clause: '='
         }]
       }
-      $('#loading').css({display: 'block'})
+      $('#loading').css({display: flag ? 'block' : 'none'})
       this.APIRequest('invitations/retrieve', parameter).then(response => {
         $('#loading').css({display: 'none'})
+        localStorage.setItem('invitations/' + this.user.code, JSON.stringify(response))
         if(response.data.length > 0){
           this.data = response.data
         }else{
@@ -151,6 +162,7 @@ export default {
         }
         $('#loading').css({display: 'block'})
         this.APIRequest('invitations/create', parameter).done(response => {
+          console.log('response', response)
           if(response.data > 0 && response.data !== null){
             // success message here
             this.email = null
@@ -158,10 +170,15 @@ export default {
             this.successMessage = 'Invitation Sent!'
             this.errorMessage = null
             this.retrieve()
+            console.log(this.successMessage)
           }else{
             // error message here
-            this.successMessage = null
-            this.errorMessage = response.error
+            if(response.error.status === 100){
+              this.errorMessage = 'Invitation not sent. Try Again!'
+            }else{
+              this.errorMessage = response.error
+            }
+            this.errorMessage = 'Invitation not sent. Try Again!'
             $('#loading').css({display: 'none'})
           }
         })

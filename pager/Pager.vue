@@ -1,17 +1,19 @@
 <template>
-  <div>
-    <ul class="pagination pull-right">
+  <div class="pull-right">
+    <ul class="pagination">
+      <li>
+        <select v-if="includesDropDown !== false" class="btn btn-default" v-model="localLimit"  @change="changeLimit">
+          <option class="dropdown-title" v-for="item in 5" :value="(item * 5)" :key="item">
+            {{parseInt(item * 5)}}
+          </option>
+        </select>
+      </li>
       <li class="page-item" v-if="active > 1"><span class="page-link" @click="onPrevious()">Previous</span></li>
       <li class="page-item" v-if="active >= 2"><span class="page-link" @click="onSelectedPage(active - 1)">{{active - 1}}</span></li>
       <li class="page-item"><span class="page-link bg-primary" @click="onSelectedPage(active)">{{active}}</span></li>
       <li class="page-item" v-if="active < pages"><span class="page-link" @click="onSelectedPage(active + 1)">{{active + 1}}</span></li>
       <li class="page-item" v-if="active < pages"><span class="page-link" @click="onNext()">Next</span></li>
     </ul>
-    <select v-if="includesDropDown !== false" class="btn btn-default pull-right" style="margin-right: 5px;" v-model="localLimit"  @change="changeLimit">
-      <option class="dropdown-title" v-for="item in 5" :value="(item * 5)" :key="item">
-        {{parseInt(item * 5)}}
-      </option>
-    </select>
   </div>
 </template>
 <style scoped lang="scss">
@@ -28,6 +30,7 @@
   height: 40px !important;
   border: solid 1px #ccc !important;
 }
+
 
 .page-link{
   line-height: 40px !important;

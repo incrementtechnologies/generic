@@ -1,7 +1,10 @@
 <template>
   <div class="filter">
     <div class="input-group">
-      <button class="btn btn-primary select-btn text-left">Sort by
+      <button class="btn btn-primary select-btn dropdown">
+        <option class="dropdown-title" v-for="(item, index) in category" :value="index" :key="index">
+          {{item.title}}
+        </option>
       </button>
       <select class="btn btn-warning select-btn dropdown" v-model="sortValue" @change="changeSort" v-if="activeSort !== null">
         <option class="dropdown-title" v-for="(item, index) in activeSort" :value="index" :key="index">
@@ -9,11 +12,6 @@
         </option>
       </select>
       <input :type="(activeSort !== null && (typeof activeSort[sortValue].input_type !== undefined && activeSort[sortValue].input_type !== 'undefined')) ? activeSort[sortValue].input_type : 'text'" class="form-control" v-model="searchValue" @keypress="keypressHandler" :placeholder="'Search ' + '...'">
-<!--       <div class="view-container">
-        <div class="view-option">
-          <i :class="`fa fa-${grid[toggleStyle]}`" @click="changeView()" aria-hidden="true"></i>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>

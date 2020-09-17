@@ -11,35 +11,69 @@
           </div>
           <div class="modal-body">
             <span class="search">
-              <input type="text" class="form-control form-control-custom" v-model="searchValue" placeholder="Search something..." @keyup.enter="search()">
-              <!-- <i class="fa fa-search" @click="search()"></i> -->
+              <input type="text" class="form-control form-control-custom" v-model="searchValue" placeholder="Search something..." @keyup="filterImage()">
+              <!-- <i class="fa fa-search" @click="retrieve()"></i> -->
             </span>
             <span class="settings">
               <p v-if="errorMessage !== null" class="text-danger" style="margin-top: 10px;">
                 <b>Opps!</b> {{errorMessage}}
               </p>
-              <span class="image-holder" style="text-align: center;" @click="addImage()">
-                <i class="fa fa-plus" style="font-size: 60px; line-height: 200px;"></i>
-                <input type="file" id="Image" accept="image/*" @change="setUpFileUpload($event)">
-              </span>
-              <span v-bind:class="{'active-image': item.active === true}" class="image-holder" v-for="item, index in data" @click="select(index)" v-if="data !== null">
-                <img :src="config.BACKEND_URL + item.url">
-              </span>
+                <span class="image-holder" style="text-align: center;" @click="addImage()">
+                  <i class="fa fa-plus" style="font-size: 60px; line-height: 200px;"></i>
+                  <input type="file" id="Image" accept="image/*" @change="setUpFileUpload($event)">
+                </span>
+                <span v-if="data !== null">
+                  <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="(item, index) in filteredData" v-bind:key="index" @click="select(index)">
+                    <img :src="config.BACKEND_URL + item.url"/>
+                    <button type="button" class="btn btn-danger" id="deleteBtn" data-toggle="modal" data-target="#confirm-delete" v-if="item.active" @click="selectDeleteImage(item.id)">
+                      <i class="fa fa-times"></i>
+                    </button>
+                  </span>
+                </span>
             </span>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-danger" @click="close()">Cancel</button>
+            <button class="btn btn-secondary" @click="close()">Cancel</button>
             <button class="btn btn-primary" @click="apply()">Apply</button>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Modal for confirmation -->
+     <div class="modal fade right" id="confirm-delete" tabindex="1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+      <div class="modal-dialog modal-side modal-notify modal-primary " role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Are you sure?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" class="white-text">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body p-4" >
+            <p>Do you really want to delete this photo?</p>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="modal" data-target="#browseImagesModal">Cancel</button>
+              <button class="btn btn-danger btn-ok" data-dismiss="modal" @click="deleteImage()" >Delete</button>
+            </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
 .bg-primary{
   background: $primary !important; 
+}
+#deleteBtn{
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  border-radius: 20px;
 }
 .item{
   width: 100%;
@@ -81,6 +115,7 @@
   cursor: pointer;
 }
 .image-holder{
+  position: relative;
   width: 200px;
   float: left;
   height: 200px;
@@ -121,6 +156,10 @@
   background: #ffaa81;
   border: solid 1px #ffaa81;
 }
+.active-image1{
+  background: blue;
+  border: solid 1px blue;
+}
 .settings .error{
   height: 50px;
   font-size: 10px;
@@ -129,6 +168,7 @@
   float: left;
   line-height: 50px;
 }
+
 </style>
 <script>
 import ROUTER from 'src/router'
@@ -137,14 +177,16 @@ import CONFIG from 'src/config.js'
 import axios from 'axios'
 export default {
   mounted(){
-    this.search()
+    this.retrieve()
   },
   data(){
     return {
+      idImage: null,
       user: AUTH.user,
       config: CONFIG,
       searchValue: null,
       data: null,
+      filteredData: null,
       prevIndex: null,
       loadingFlag: false,
       errorMessage: null,
@@ -181,43 +223,31 @@ export default {
       }
       let formData = new FormData()
       formData.append('file', this.file)
-      formData.append('file_url', this.file.name)
+      formData.append('file_url', this.file.name.replace(' ', '_'))
       formData.append('account_id', this.user.userID)
       $('#loading').css({'display': 'block'})
       axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.data !== null){
-          this.search()
+          this.retrieve()
         }
       })
+      this.prevIndex = null
     },
-    search(){
-      let parameter = null
-      if(this.searchValue !== null && this.searchValue !== ''){
-        parameter = {
-          condition: [{
-            value: '%' + this.searchValue + '%',
-            column: 'url',
-            clause: 'like'
-          }, {
-            value: this.user.userID,
-            column: 'account_id',
-            clause: '='
-          }],
-          sort: {
-            created_at: 'desc'
-          }
-        }
-      }else{
-        parameter = {
-          condition: [{
-            value: this.user.userID,
-            column: 'account_id',
-            clause: '='
-          }],
-          sort: {
-            created_at: 'desc'
-          }
+    filterImage() {
+      if (this.data === null || this.filteredData === null) return
+      const _data = [...this.data]
+      this.filteredData = _data.filter(image => image.url.toLowerCase().indexOf(this.searchValue) > -1)
+    },
+    retrieve(){
+      const parameter = {
+        condition: [{
+          value: this.user.userID,
+          column: 'account_id',
+          clause: '='
+        }],
+        sort: {
+          created_at: 'desc'
         }
       }
       this.loadingFlag = true
@@ -225,8 +255,10 @@ export default {
         this.loadingFlag = false
         if(response.data.length > 0){
           this.data = response.data
+          this.filteredData = response.data
         }else{
           this.data = null
+          this.filteredData = null
         }
       })
     },
@@ -245,12 +277,36 @@ export default {
     apply(){
       if(this.prevIndex !== null){
         this.$parent.manageImageUrl(this.data[this.prevIndex].url)
+        this.data[this.prevIndex].active = false
         this.close()
       }
     },
     close(){
+      if(!this.data){
+        $('#browseImagesModal').modal('hide')
+      }else{
+        this.prevIndex = null
+        $('#browseImagesModal').modal('hide')
+      }
+      this.data[this.prevIndex].active = false
       this.prevIndex = null
       $('#browseImagesModal').modal('hide')
+    },
+    selectDeleteImage(id){
+      this.idImage = id
+      $('#browseImagesModal').modal('hide')
+    },
+    deleteImage(){
+      let params = {
+        id: this.idImage
+      }
+      axios.post(this.config.BACKEND_URL + '/images/delete?token=' + AUTH.tokenData.token, params).then(response => {
+        this.retrieve()
+      })
+      this.prevIndex = null
+      setTimeout(() => {
+        $('#browseImagesModal').modal('show')
+      }, 800)
     }
   }
 }
