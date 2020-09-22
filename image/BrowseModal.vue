@@ -27,8 +27,8 @@
                 <!-- for images and videos in products-->
                 <span v-if="data !== null && isProfile">
                   <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="(item, index) in filteredData" v-bind:key="index" @click="select(index)">
-                    <img style="max-width: 100%;max-height: 100%;display: block;" :src="config.BACKEND_URL + item.url" v-if="getFileType(config.BACKEND_URL + item.url) === 'img'">
-                    <video style="max-width: 100%;max-height: 100%;display: block;" v-if="getFileType(config.BACKEND_URL + item.url) === 'vid'" controls>
+                    <img style="width: 100%;height: 100%;display: block;" :src="config.BACKEND_URL + item.url" v-if="getFileType(config.BACKEND_URL + item.url) === 'img'">
+                    <video style="width: 100%;height: 100%;display: block;" v-if="getFileType(config.BACKEND_URL + item.url) === 'vid'" controls>
                       <source :src="config.BACKEND_URL + item.url" type="video/webm">
                       <source :src="config.BACKEND_URL + item.url" type="video/mp4">
                     </video>   
@@ -40,7 +40,7 @@
                 <!-- for images only in profile page -->
                 <span v-if="data !== null && !isProfile">
                   <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="(item, index) in filteredData" v-bind:key="index" v-if="getFileType(config.BACKEND_URL + item.url) === 'img'" @click="select(index)">
-                    <img style="max-width: 100%;max-height: 100%;display: block;" :src="config.BACKEND_URL + item.url">
+                    <img style="width: 100%;height: 100%;display: block;" :src="config.BACKEND_URL + item.url">
                     <button type="button" class="btn btn-danger" id="deleteBtn" data-toggle="modal" data-target="#confirm-delete" v-if="item.active" @click="selectDeleteImage(item.id)">
                       <i class="fa fa-times"></i>
                     </button>
