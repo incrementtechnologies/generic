@@ -4,7 +4,7 @@
       <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
           <div class="modal-header bg-primary">
-            <h5 class="modal-title" id="exampleModalLabel">Files</h5>
+            <h5 class="modal-title" id="exampleModalLabel">{{modalTitle}}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="close()">
               <span aria-hidden="true" class="text-white">&times;</span>
             </button>
@@ -21,16 +21,26 @@
                 <span class="image-holder" style="text-align: center;" @click="addImage()">
                   <i class="fa fa-plus" style="font-size: 60px; line-height: 150px;"></i>
                   <p style="color:#bababa;font-size:20px;">Photo/Video</p>
-                  <input type="file" id="File" accept="video/*,image/*" @change="setUpFileUpload($event)">
+                  <input type="file" id="File" accept="video/*,image/*" v-if="isProfile" @change="setUpFileUpload($event)">
+                  <input type="file" id="File" accept="image/*" v-if="!isProfile" @change="setUpFileUpload($event)">
                 </span>
-                <span v-if="data !== null">
+                <!-- for images and videos in products-->
+                <span v-if="data !== null && isProfile">
                   <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="(item, index) in filteredData" v-bind:key="index" @click="select(index)">
-                    <!-- <img :src="config.BACKEND_URL + item.url"/> -->
                     <img style="max-width: 100%;max-height: 100%;display: block;" :src="config.BACKEND_URL + item.url" v-if="getFileType(config.BACKEND_URL + item.url) === 'img'">
-                    <video style="max-width: 100%;max-height: 100%;display: block;" v-else-if="getFileType(config.BACKEND_URL + item.url) === 'vid'" controls>
+                    <video style="max-width: 100%;max-height: 100%;display: block;" v-if="getFileType(config.BACKEND_URL + item.url) === 'vid'" controls>
                       <source :src="config.BACKEND_URL + item.url" type="video/webm">
                       <source :src="config.BACKEND_URL + item.url" type="video/mp4">
                     </video>   
+                    <button type="button" class="btn btn-danger" id="deleteBtn" data-toggle="modal" data-target="#confirm-delete" v-if="item.active" @click="selectDeleteImage(item.id)">
+                      <i class="fa fa-times"></i>
+                    </button>
+                  </span>
+                </span>
+                <!-- for images only in profile page -->
+                <span v-if="data !== null && !isProfile">
+                  <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="(item, index) in filteredData" v-bind:key="index" v-if="getFileType(config.BACKEND_URL + item.url) === 'img'" @click="select(index)">
+                    <img style="max-width: 100%;max-height: 100%;display: block;" :src="config.BACKEND_URL + item.url">
                     <button type="button" class="btn btn-danger" id="deleteBtn" data-toggle="modal" data-target="#confirm-delete" v-if="item.active" @click="selectDeleteImage(item.id)">
                       <i class="fa fa-times"></i>
                     </button>
@@ -184,6 +194,11 @@ import CONFIG from 'src/config.js'
 import axios from 'axios'
 export default {
   mounted(){
+    if(this.isProfile === true){
+      this.modalTitle = 'Files'
+    }else{
+      this.modalTitle = 'Images'
+    }
     this.retrieve()
   },
   data(){
@@ -197,10 +212,17 @@ export default {
       prevIndex: null,
       loadingFlag: false,
       errorMessage: null,
+      modalTitle: null,
       file: null
     }
   },
   props: ['customId'],
+  computed: {
+    isProfile(){
+      console.log(this.$route.name !== 'profile')
+      return this.$route.name !== 'profile'
+    }
+  },
   methods: {
     getFileType(url){
       let url1 = url.toLowerCase()
@@ -215,7 +237,6 @@ export default {
     },
     setUpFileUpload(event){
       let files = event.target.files || event.dataTransfer.files
-      let videoration = 0
       if(!files.length){
         return false
       }else{
@@ -223,11 +244,20 @@ export default {
         console.log(this.file.name)
         console.log(this.file.name.substring(this.file.name.lastIndexOf('.')))
         let filename = this.file.name.toLowerCase()
-        if(filename.substring(filename.lastIndexOf('.')) === '.webm' || filename.substring(filename.lastIndexOf('.')) === '.mp4' || filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
-          this.createFile(files[0])
+        if(this.isProfile === true){
+          if(filename.substring(filename.lastIndexOf('.')) === '.webm' || filename.substring(filename.lastIndexOf('.')) === '.mp4' || filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
+            this.createFile(files[0])
+          }else{
+            this.errorMessage = 'File format is not acceptable!'
+            this.file = null
+          }
         }else{
-          this.errorMessage = 'File format is not acceptable!'
-          this.file = null
+          if(filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
+            this.createFile(files[0])
+          }else{
+            this.errorMessage = 'Upload images only!'
+            this.file = null
+          }
         }
       }
     },
