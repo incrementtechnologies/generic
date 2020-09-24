@@ -44,7 +44,6 @@
 }
 @media (max-width: 991px){
 }
-
 </style>
 <script>
   import ROUTER from 'src/router'

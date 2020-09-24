@@ -37,15 +37,6 @@
                     </button>
                   </span>
                 </span>
-                <!-- for images only in profile page -->
-                <span v-if="data !== null && !isProfile">
-                  <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="(item, index) in filteredData" v-bind:key="index" v-if="getFileType(config.BACKEND_URL + item.url) === 'img'" @click="select(index)">
-                    <img style="width: 100%;height: 100%;display: block;" :src="config.BACKEND_URL + item.url">
-                    <button type="button" class="btn btn-danger" id="deleteBtn" data-toggle="modal" data-target="#confirm-delete" v-if="item.active" @click="selectDeleteImage(item.id)">
-                      <i class="fa fa-times"></i>
-                    </button>
-                  </span>
-                </span>
             </span>
           </div>
           <div class="modal-footer">
