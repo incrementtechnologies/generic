@@ -4,7 +4,7 @@
       <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
           <div class="modal-header bg-primary">
-            <h5 class="modal-title" id="exampleModalLabel">{{modalTitle}}</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Files</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="close()">
               <span aria-hidden="true" class="text-white">&times;</span>
             </button>
@@ -21,11 +21,10 @@
                 <span class="image-holder" style="text-align: center;" @click="addImage()">
                   <i class="fa fa-plus" style="font-size: 60px; line-height: 150px;"></i>
                   <p style="color:#bababa;font-size:20px;">Photo/Video</p>
-                  <input type="file" id="File" accept="video/*,image/*" v-if="isProfile" @change="setUpFileUpload($event)">
-                  <input type="file" id="File" accept="image/*" v-if="!isProfile" @change="setUpFileUpload($event)">
+                  <input type="file" id="File" :accept="type ? type : 'video/*,image/*'" @change="setUpFileUpload($event)">
                 </span>
                 <!-- for images and videos in products-->
-                <span v-if="data !== null && isProfile">
+                <span v-if="data !== null">
                   <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="(item, index) in filteredData" v-bind:key="index" @click="select(index)">
                     <img style="width: 100%;height: 100%;display: block;" :src="config.BACKEND_URL + item.url" v-if="getFileType(config.BACKEND_URL + item.url) === 'img'">
                     <video style="width: 100%;height: 100%;display: block;" v-if="getFileType(config.BACKEND_URL + item.url) === 'vid'" controls>
@@ -203,17 +202,10 @@ export default {
       prevIndex: null,
       loadingFlag: false,
       errorMessage: null,
-      modalTitle: null,
       file: null
     }
   },
   props: ['customId', 'type'],
-  computed: {
-    isProfile(){
-      console.log(this.$route.name !== 'profile')
-      return this.$route.name !== 'profile'
-    }
-  },
   methods: {
     getFileType(url){
       let url1 = url.toLowerCase()
@@ -232,23 +224,12 @@ export default {
         return false
       }else{
         this.file = files[0]
-        console.log(this.file.name)
-        console.log(this.file.name.substring(this.file.name.lastIndexOf('.')))
         let filename = this.file.name.toLowerCase()
-        if(this.isProfile === true){
-          if(filename.substring(filename.lastIndexOf('.')) === '.webm' || filename.substring(filename.lastIndexOf('.')) === '.mp4' || filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
-            this.createFile(files[0])
-          }else{
-            this.errorMessage = 'File format is not acceptable!'
-            this.file = null
-          }
+        if(filename.substring(filename.lastIndexOf('.')) === '.webm' || filename.substring(filename.lastIndexOf('.')) === '.mp4' || filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
+          this.createFile(files[0])
         }else{
-          if(filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
-            this.createFile(files[0])
-          }else{
-            this.errorMessage = 'Upload images only!'
-            this.file = null
-          }
+          this.errorMessage = 'File format is not acceptable!'
+          this.file = null
         }
       }
     },
