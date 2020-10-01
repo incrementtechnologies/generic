@@ -20,7 +20,7 @@
               </p>
                 <span class="image-holder" style="text-align: center;" @click="addImage()">
                   <i class="fa fa-plus" style="font-size: 60px; line-height: 150px;"></i>
-                  <p style="color:#bababa;font-size:20px;">Photo/Video</p>
+                  <p style="color:black;font-size:20px;">Photo/Video</p>
                   <input type="file" id="File" :accept="type ? type : 'video/*,image/*'" @change="setUpFileUpload($event)">
                 </span>
                 <!-- for images and videos in products-->
