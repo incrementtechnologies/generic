@@ -184,11 +184,6 @@ import CONFIG from 'src/config.js'
 import axios from 'axios'
 export default {
   mounted(){
-    if(this.isProfile === true){
-      this.modalTitle = 'Files'
-    }else{
-      this.modalTitle = 'Images'
-    }
     this.retrieve()
   },
   data(){
