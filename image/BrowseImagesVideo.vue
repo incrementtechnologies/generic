@@ -4,7 +4,7 @@
       <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
           <div class="modal-header bg-primary">
-            <h5 class="modal-title" id="exampleModalLabel">{{modalTitle ? modalTitle : 'Images'}}</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Files</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="close()">
               <span aria-hidden="true" class="text-white">&times;</span>
             </button>
@@ -19,12 +19,18 @@
                 <b>Opps!</b> {{errorMessage}}
               </p>
                 <span class="image-holder" style="text-align: center;" @click="addImage()">
-                  <i class="fa fa-plus" style="font-size: 60px; line-height: 200px;"></i>
-                  <input type="file" id="Image" :accept="type ? type : 'image/*'" @change="setUpFileUpload($event)">
+                  <i class="fa fa-plus" style="font-size: 60px; line-height: 150px;"></i>
+                  <p style="color:black;font-size:20px;">Photo/Video</p>
+                  <input type="file" id="File" :accept="type ? type : 'video/*,image/*'" @change="setUpFileUpload($event)">
                 </span>
+                <!-- for images and videos in products-->
                 <span v-if="data !== null">
-                  <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="(item, index) in filteredData" v-bind:key="index" v-if="getFileType(config.BACKEND_URL + item.url) === 'img'" @click="select(index)">
-                    <img style="width: 100%;height: 100%;display: block;" :src="config.BACKEND_URL + item.url"/>
+                  <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="(item, index) in filteredData" v-bind:key="index" @click="select(index)">
+                    <img style="width: 100%;height: 100%;display: block;" :src="config.BACKEND_URL + item.url" v-if="getFileType(config.BACKEND_URL + item.url) === 'img'">
+                    <video style="width: 100%;height: 100%;display: block;" v-if="getFileType(config.BACKEND_URL + item.url) === 'vid'" controls>
+                      <source :src="config.BACKEND_URL + item.url" type="video/webm">
+                      <source :src="config.BACKEND_URL + item.url" type="video/mp4">
+                    </video>   
                     <button type="button" class="btn btn-danger" id="deleteBtn" data-toggle="modal" data-target="#confirm-delete" v-if="item.active" @click="selectDeleteImage(item.id)">
                       <i class="fa fa-times"></i>
                     </button>
@@ -87,9 +93,11 @@
   line-height: 50px;
   text-align: center;
 }
+
 .header .fa-close{
   padding-right: 5px;
 }
+
 .settings{
   min-height: 200px;
   float: left;
@@ -126,6 +134,8 @@
   max-width: 100%;
   float: left;
 }
+
+
 .image-holder input{
   display: none;
   height: 200px;
@@ -165,6 +175,7 @@
   float: left;
   line-height: 50px;
 }
+
 </style>
 <script>
 import ROUTER from 'src/router'
@@ -189,7 +200,7 @@ export default {
       file: null
     }
   },
-  props: ['customId', 'type', 'modalTitle'],
+  props: ['customId', 'type'],
   methods: {
     getFileType(url){
       let url1 = url.toLowerCase()
@@ -200,7 +211,7 @@ export default {
       ROUTER.push(parameter)
     },
     addImage(){
-      $('#Image')[0].click()
+      $('#File')[0].click()
     },
     setUpFileUpload(event){
       let files = event.target.files || event.dataTransfer.files
@@ -209,10 +220,10 @@ export default {
       }else{
         this.file = files[0]
         let filename = this.file.name.toLowerCase()
-        if(filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
+        if(filename.substring(filename.lastIndexOf('.')) === '.webm' || filename.substring(filename.lastIndexOf('.')) === '.mp4' || filename.substring(filename.lastIndexOf('.')) === '.png' || filename.substring(filename.lastIndexOf('.')) === '.jpg' || filename.substring(filename.lastIndexOf('.')) === '.jpeg' || filename.substring(filename.lastIndexOf('.')) === '.gif' || filename.substring(filename.lastIndexOf('.')) === '.tif' || filename.substring(filename.lastIndexOf('.')) === '.bmp'){
           this.createFile(files[0])
         }else{
-          this.errorMessage = 'Upload images only!'
+          this.errorMessage = 'File format is not acceptable!'
           this.file = null
         }
       }
@@ -233,7 +244,6 @@ export default {
       formData.append('file_url', this.file.name.replace(' ', '_'))
       formData.append('account_id', this.user.userID)
       $('#loading').css({'display': 'block'})
-      console.log('imageRoute', formData)
       axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.data !== null){
