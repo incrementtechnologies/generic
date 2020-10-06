@@ -110,7 +110,6 @@ export default {
       this.payload1 = payload1
       this.payloadValue1 = payloadValue1
       this.retrieve()
-      $('#submitRatingModal').modal('show')
     },
     create() {
       if (this.active > 0) {
@@ -182,6 +181,7 @@ export default {
           this.errorMessage = null
           this.active = 0
         }
+        $('#submitRatingModal').modal('show')
       })
     }
   }
