@@ -13,14 +13,22 @@
               {{errorMessage}}
             </label>
           </span>
-          <span class="star-holder">
+          <span class="star-holder" id="rate">
             <i
               v-bind:class="{'far': active === 0 || i > active, 'fas text-warning': i <= active}"
               v-for="i in 5"
               v-on:click="makeActive(i)"
               class="fa-star"
             ></i>
-            <br>{{text}}
+            <br>Click the stars
+          </span>
+          <span class="star-holder" id="reviewed">
+            <i
+              v-bind:class="{'far': stars === 0 || i > stars, 'fas text-warning': i <= stars}"
+              v-for="i in 5"
+              class="fa-star"
+            ></i>
+            <br>You've submitted reviews already.
           </span>
         </div>
         <div id="modalfooter" class="modal-footer">
@@ -49,6 +57,13 @@
   margin-top: 50px;
 }
 
+#rate {
+  display: block;
+}
+
+#reviewed {
+  display:none;
+}
 .fa-star {
   font-size: 50px;
 }
@@ -67,9 +82,9 @@ export default {
     return {
       user: AUTH.user,
       active: 0,
+      stars: 0,
       errorMessage: null,
       title: 'Submit Rating',
-      text: 'Click the stars',
       payload: null,
       payloadValue: null,
       payload1: null,
@@ -155,12 +170,15 @@ export default {
         console.log('retrieve ratings: ', response.data)
         if (response.data !== null) {
           this.errorMessage = null
-          this.active = response.stars
-          this.active.disabled
-          this.text = null
+          this.stars = response.stars
           document.getElementById('modalfooter').style.display = 'none'
+          document.getElementById('rate').style.display = 'none'
+          document.getElementById('reviewed').style.display = 'block'
           this.title = 'Rating Submitted'
         }else{
+          document.getElementById('modalfooter').style.display = 'block'
+          document.getElementById('rate').style.display = 'block'
+          document.getElementById('reviewed').style.display = 'none'
           this.errorMessage = null
           this.active = 0
         }
