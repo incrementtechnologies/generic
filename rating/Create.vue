@@ -3,7 +3,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Submit Rating</h4>
+          <h4 class="modal-title">{{title}}</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body" style="height: 250px;">
@@ -13,27 +13,24 @@
               {{errorMessage}}
             </label>
           </span>
-          <span class="star-holder" id="star">
+          <span class="star-holder">
             <i
               v-bind:class="{'far': active === 0 || i > active, 'fas text-warning': i <= active}"
               v-for="i in 5"
               v-on:click="makeActive(i)"
               class="fa-star"
             ></i>
-            <br>Click the stars
-          </span>
-          <span id="reviewed">
-          "You've submitted reviews already."
+            <br>{{text}}
           </span>
         </div>
-        <div class="modal-footer">
+        <div id="modalfooter" class="modal-footer">
           <button
             type="button"
             class="btn btn-danger"
             data-dismiss="modal"
             v-on:click="cancel()"
           >Cancel</button>
-          <button id="submitbtn" type="button" class="btn btn-primary" v-on:click="create()">Submit</button>
+          <button type="button" class="btn btn-primary" v-on:click="create()">Submit</button>
         </div>
       </div>
     </div>
@@ -51,19 +48,7 @@
   text-align: center;
   margin-top: 50px;
 }
-#star{
-  display: block;
-}
-#reviewed {
-  width: 100%;
-  float: left;
-  font-size:20px;
-  color: green;
-  font-style: italic;
-  text-align: center;
-  margin-top: 50px;
-  display: none;
-}
+
 .fa-star {
   font-size: 50px;
 }
@@ -78,14 +63,13 @@ import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 export default {
-  mounted() {
-    this.retrieve()
-  },
   data() {
     return {
       user: AUTH.user,
       active: 0,
       errorMessage: null,
+      title: 'Submit Rating',
+      text: 'Click the stars',
       payload: null,
       payloadValue: null,
       payload1: null,
@@ -110,6 +94,7 @@ export default {
       this.payloadValue = payloadValue
       this.payload1 = payload1
       this.payloadValue1 = payloadValue1
+      this.retrieve()
       $('#submitRatingModal').modal('show')
     },
     create() {
@@ -124,23 +109,16 @@ export default {
           status: 'all'
         }
         this.APIRequest('ratings/create', parameter).then(response => {
-          console.log('created rating here: ', response.data)
           if (response.error.length > 0) {
             this.errorMessage = response.error.message
           } else if (response.data > 0) {
             this.errorMessage = null
             $('#submitRatingModal').modal('hide')
-            this.$parent.retrieve()
-            document.getElementById('reviewed').style.display = 'block'
-            document.getElementById('star').style.display = 'none'
-            document.getElementById('submitbtn').style.display = 'none'
+            this.retrieve()
           } else {
             this.errorMessage = null
             $('#submitRatingModal').modal('hide')
-            this.$parent.retrieve()
-            document.getElementById('reviewed').style.display = 'block'
-            document.getElementById('star').style.display = 'none'
-            document.getElementById('submitbtn').style.display = 'none'
+            this.retrieve()
           }
         })
       } else {
@@ -175,6 +153,17 @@ export default {
       }
       this.APIRequest('ratings/retrieve', parameter).then(response => {
         console.log('retrieve ratings: ', response.data)
+        if (response.data !== null) {
+          this.errorMessage = null
+          this.active = response.stars
+          this.active.disabled
+          this.text = null
+          document.getElementById('modalfooter').style.display = 'none'
+          this.title = 'Rating Submitted'
+        }else{
+          this.errorMessage = null
+          this.active = 0
+        }
       })
     }
   }
