@@ -108,7 +108,7 @@ export default {
           status: 'all'
         }
         this.APIRequest('ratings/create', parameter).then(response => {
-          console.log('created here: ', response.data)
+          console.log('created rating here: ', response.data)
           if (response.error.length > 0) {
             this.errorMessage = response.error.message
           } else if (response.data > 0) {
@@ -152,7 +152,7 @@ export default {
         account_id: this.user.userID
       }
       this.APIRequest('ratings/retrieve', parameter).then(response => {
-        console.log('retrieve here: ', response.data)
+        console.log('retrieve ratings: ', response.data)
       })
     }
   }
