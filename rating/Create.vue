@@ -13,7 +13,7 @@
               {{errorMessage}}
             </label>
           </span>
-          <span class="star-holder">
+          <span class="star-holder" id="star">
             <i
               v-bind:class="{'far': active === 0 || i > active, 'fas text-warning': i <= active}"
               v-for="i in 5"
@@ -21,6 +21,9 @@
               class="fa-star"
             ></i>
             <br>Click the stars
+          </span>
+          <span id="reviewed">
+          "You've submitted reviews already."
           </span>
         </div>
         <div class="modal-footer">
@@ -30,7 +33,7 @@
             data-dismiss="modal"
             v-on:click="cancel()"
           >Cancel</button>
-          <button type="button" class="btn btn-primary" v-on:click="create()">Submit</button>
+          <button id="submitbtn" type="button" class="btn btn-primary" v-on:click="create()">Submit</button>
         </div>
       </div>
     </div>
@@ -47,6 +50,19 @@
   float: left;
   text-align: center;
   margin-top: 50px;
+}
+#star{
+  display: block;
+}
+#reviewed {
+  width: 100%;
+  float: left;
+  font-size:20px;
+  color: green;
+  font-style: italic;
+  text-align: center;
+  margin-top: 50px;
+  display: none;
 }
 .fa-star {
   font-size: 50px;
@@ -115,10 +131,16 @@ export default {
             this.errorMessage = null
             $('#submitRatingModal').modal('hide')
             this.$parent.retrieve()
+            document.getElementById('reviewed').style.display = 'block'
+            document.getElementById('star').style.display = 'none'
+            document.getElementById('submitbtn').style.display = 'none'
           } else {
             this.errorMessage = null
             $('#submitRatingModal').modal('hide')
             this.$parent.retrieve()
+            document.getElementById('reviewed').style.display = 'block'
+            document.getElementById('star').style.display = 'none'
+            document.getElementById('submitbtn').style.display = 'none'
           }
         })
       } else {
