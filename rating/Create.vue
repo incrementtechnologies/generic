@@ -13,7 +13,7 @@
               {{errorMessage}}
             </label>
           </span>
-          <span class="star-holder" v-if="this.stars === 0">
+          <span class="star-holder" v-if="this.title === 'Submit Rating'">
             <i
               v-bind:class="{'far': active === 0 || i > active, 'fas text-warning': i <= active}"
               v-for="i in 5"
@@ -22,7 +22,7 @@
             ></i>
             <br>Click the stars
           </span>
-          <span class="star-holder" v-if="this.stars !== 0">
+          <span class="star-holder" v-if="this.title !== 'Submit Rating'">
             <i
               v-bind:class="{'far': stars === 0 || i > stars, 'fas text-warning': i <= stars}"
               v-for="i in 5"
@@ -33,13 +33,13 @@
         </div>
         <div class="modal-footer">
           <button
-            v-if="this.stars !== 0"
+           v-if="this.title !== 'Submit Rating'"
             type="button"
             class="btn btn-danger"
             data-dismiss="modal"
             v-on:click="close()"
           >Close</button>
-          <span v-if="this.stars === 0">
+          <span v-if="this.title === 'Submit Rating'">
           <button
             type="button"
             class="btn btn-danger"
@@ -171,16 +171,18 @@ export default {
         account_id: this.user.userID
       }
       this.APIRequest('ratings/retrieve', parameter).then(response => {
-        console.log('retrieve ratings: ', response.data)
-        if (response.data !== null) {
-          this.errorMessage = null
-          this.stars = response.stars
-          this.title = 'Rating Submitted'
-          $('#submitRatingModal').modal('show')
-        }else{
-          $('#submitRatingModal').modal('show')
+        // console.log('retrieve ratings: ', response.data)
+        if (response.stars === undefined) {
           this.errorMessage = null
           this.active = 0
+          this.title = 'Submit Rating'
+          $('#submitRatingModal').modal('show')
+        }else{
+          this.errorMessage = null
+          this.stars = response.data[0].value
+          this.title = 'Rating Submitted'
+          $('#submitRatingModal').modal('show')
+          // console.log('star value', response.data[0].value)
         }
       })
     }
