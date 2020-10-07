@@ -13,7 +13,7 @@
               {{errorMessage}}
             </label>
           </span>
-          <span class="star-holder" id="rate">
+          <span class="star-holder" v-if="this.stars === 0">
             <i
               v-bind:class="{'far': active === 0 || i > active, 'fas text-warning': i <= active}"
               v-for="i in 5"
@@ -22,7 +22,7 @@
             ></i>
             <br>Click the stars
           </span>
-          <span class="star-holder" id="reviewed">
+          <span class="star-holder" v-if="this.stars !== 0">
             <i
               v-bind:class="{'far': stars === 0 || i > stars, 'fas text-warning': i <= stars}"
               v-for="i in 5"
@@ -32,13 +32,14 @@
           </span>
         </div>
         <div class="modal-footer">
-          <button id="close"
+          <button
+            v-if="this.stars !== 0"
             type="button"
             class="btn btn-danger"
             data-dismiss="modal"
             v-on:click="close()"
           >Close</button>
-          <span id="modalfooter">
+          <span v-if="this.stars === 0">
           <button
             type="button"
             class="btn btn-danger"
@@ -63,14 +64,6 @@
   float: left;
   text-align: center;
   margin-top: 50px;
-}
-
-#rate {
-  display: block;
-}
-
-#reviewed, #close {
-  display:none;
 }
 
 .fa-star {
@@ -182,17 +175,10 @@ export default {
         if (response.data !== null) {
           this.errorMessage = null
           this.stars = response.stars
-          document.getElementById('modalfooter').style.display = 'none'
-          document.getElementById('rate').style.display = 'none'
-          document.getElementById('reviewed').style.display = 'block'
-          document.getElementById('close').style.display = 'block'
           this.title = 'Rating Submitted'
           $('#submitRatingModal').modal('show')
         }else{
           $('#submitRatingModal').modal('show')
-          document.getElementById('modalfooter').style.display = 'block'
-          document.getElementById('rate').style.display = 'block'
-          document.getElementById('reviewed').style.display = 'none'
           this.errorMessage = null
           this.active = 0
         }
