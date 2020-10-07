@@ -31,7 +31,14 @@
             <br>You've submitted reviews already.
           </span>
         </div>
-        <div id="modalfooter" class="modal-footer">
+        <div class="modal-footer">
+          <button id="close"
+            type="button"
+            class="btn btn-danger"
+            data-dismiss="modal"
+            v-on:click="close()"
+          >Close</button>
+          <span id="modalfooter">
           <button
             type="button"
             class="btn btn-danger"
@@ -39,6 +46,7 @@
             v-on:click="cancel()"
           >Cancel</button>
           <button type="button" class="btn btn-primary" v-on:click="create()">Submit</button>
+          </span>
         </div>
       </div>
     </div>
@@ -61,9 +69,10 @@
   display: block;
 }
 
-#reviewed {
+#reviewed, #close {
   display:none;
 }
+
 .fa-star {
   font-size: 50px;
 }
@@ -102,6 +111,9 @@ export default {
       this.payload = null
       this.payloadValue = null
       this.active = 0
+      $('#submitRatingModal').modal('hide')
+    },
+    close() {
       $('#submitRatingModal').modal('hide')
     },
     show(payload, payloadValue, payload1, payloadValue1) {
@@ -173,15 +185,17 @@ export default {
           document.getElementById('modalfooter').style.display = 'none'
           document.getElementById('rate').style.display = 'none'
           document.getElementById('reviewed').style.display = 'block'
+          document.getElementById('close').style.display = 'block'
           this.title = 'Rating Submitted'
+          $('#submitRatingModal').modal('show')
         }else{
+          $('#submitRatingModal').modal('show')
           document.getElementById('modalfooter').style.display = 'block'
           document.getElementById('rate').style.display = 'block'
           document.getElementById('reviewed').style.display = 'none'
           this.errorMessage = null
           this.active = 0
         }
-        $('#submitRatingModal').modal('show')
       })
     }
   }
