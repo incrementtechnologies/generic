@@ -60,11 +60,7 @@
 }
 
 /* Hide the browser's default radio button */
-.container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-}
+
 
 /* Create a custom radio button */
 .checkmark {
