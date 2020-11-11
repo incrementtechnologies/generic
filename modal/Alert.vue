@@ -45,7 +45,11 @@ export default {
   methods: {
     show(route){
       this.route = route
-      $('#incrementAlert').modal('show')
+      $('#incrementAlert').modal({
+        show: true,
+        backdrop: 'static',
+        keyboard: false
+      })
     },
     hideModal(){
       $('#incrementAlert').modal('hide')
