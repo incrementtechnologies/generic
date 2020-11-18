@@ -233,6 +233,7 @@ export default {
       formData.append('file_url', this.file.name.replace(' ', '_'))
       formData.append('account_id', this.user.userID)
       $('#loading').css({'display': 'block'})
+      console.log('imageRoute', formData)
       axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.data !== null){

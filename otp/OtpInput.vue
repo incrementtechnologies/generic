@@ -1,5 +1,5 @@
 <template>
-  <div class="modal fade" id="authenticateOTP" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="authenticateOTPInput" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -38,7 +38,6 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" @click="hideModal()">{{blockedFlag ? 'Close' : 'Cancel'}}</button>
           <button type="button" class="btn btn-primary" @click="verifyOtp()" v-if="successFlag === false">Authenticate</button>
-          <button type="button" class="btn btn-primary" @click="successOTP()" v-if="successFlag === true">Continue</button>
         </div>
       </div>
     </div>
@@ -177,16 +176,17 @@ export default {
       successFlag: false,
       blockedFlag: false,
       successMessage: null,
-      resendFlag: false
+      resendFlag: false,
+      otpCode: ''
     }
   },
   methods: {
     show(){
-      $('#authenticateOTP').modal('show')
+      this.initOtp()
+      $('#authenticateOTPInput').modal('show')
     },
     hideModal(){
-      $('#authenticateOTP').modal('hide')
-      this.initOtp()
+      $('#authenticateOTPInput').modal('hide')
     },
     redirect(parameter){
       ROUTER.push(parameter)
@@ -196,89 +196,11 @@ export default {
       this.otpInput = null
       this.successFlag = false
       this.errorMessage = null
+      this.otpCode = ''
       this.successMessage = null
       for (var i = 0; i < this.otp.length; i++) {
         this.otp[i].code = null
       }
-    },
-    verifyOtp(){
-      if(this.otpInput !== null && this.otpInput.length < 6){
-        return false
-      }
-      $('#loading').css({display: 'block'})
-      let id = null
-      if(this.user.userID === 0){
-        id = AUTH.otpDataHolder.userInfo.id
-      }else{
-        id = AUTH.user.userID
-      }
-      let parameter = {
-        condition: [{
-          value: id,
-          column: 'account_id',
-          clause: '='
-        }, {
-          value: this.otpInput,
-          column: 'code',
-          clause: '='
-        }]
-      }
-      this.APIRequest('notification_settings/retrieve', parameter).then(response => {
-        $('#loading').css({display: 'none'})
-        if(response.data.length > 0){
-          this.errorMessage = null
-          this.successFlag = true
-          this.successMessage = 'Successfully verified!'
-          // true
-          // call proceed
-        }else{
-          this.successFlag = false
-          this.errorMessage = 'Sorry, you are not authorize to proceed the transaction. Please get back after 30 minutes. Or you can email at ' + COMMON.APP_EMAIL + ' as well if you want to resolve the account ASAP.'
-          this.blockedAccount()
-        }
-      })
-    },
-    blockedAccount(){
-      let id = null
-      if(this.user.userID === 0){
-        id = AUTH.otpDataHolder.userInfo.id
-      }else{
-        id = AUTH.user.userID
-      }
-      let parameter = {
-        account_id: id
-      }
-      this.APIRequest('notification_settings/block_account', parameter).then(response => {
-        this.blockedFlag = true
-      })
-    },
-    generateOTP(){
-      $('#loading').css({display: 'block'})
-      this.resendFlag = true
-      let id = null
-      if(this.user.userID === 0){
-        id = AUTH.otpDataHolder.userInfo.id
-      }else{
-        id = AUTH.user.userID
-      }
-      let parameter = {
-        account_id: id
-      }
-      this.APIRequest('notification_settings/update_otp', parameter).then(response => {
-        this.resendFlag = false
-        $('#loading').css({display: 'none'})
-        this.otpData = response
-        this.initOtp()
-        if(response.error === null){
-          this.blockedFlag = false
-        }else{
-          this.blockedFlag = true
-          this.errorMessage = response.error + ' ' + 'Or you can email at ' + COMMON.APP_EMAIL + ' as well if you want to resolve the account ASAP.'
-        }
-        if(this.user.userID > 0){
-          $('#authenticateOTP').modal('show')
-        }
-      })
     },
     otpHandler(index){
       if(index < 5){
@@ -294,9 +216,23 @@ export default {
         }, 100)
       }
     },
+    verifyOtp(){
+      this.errorMessage = null
+      for (var i = 0; i < this.otp.length; i++) {
+        if(this.otp[i].code === null){
+          this.errorMessage = 'Invalid Code!'
+          return
+        }else{
+          this.otpCode += this.otp[i].code
+        }
+      }
+      if(this.errorMessage === null){
+        this.successOTP()
+      }
+    },
     successOTP(){
       this.hideModal()
-      this.$parent.successOTP()
+      this.$parent.successOTP(this.otpCode)
     }
   }
 }
