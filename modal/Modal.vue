@@ -595,6 +595,9 @@ export default {
             if(response.data !== null){
               this.errorMessage = null
               this.hideModal()
+              if(this.property.route === 'paddock_plans/create') {
+                this.$parent.$parent.retrieve({'name': 'asc'}, {column: 'name', value: ''})
+              }
               this.$parent.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
             }else if(response.error !== null){
               for(let key of Object.keys(response.error.message)){
