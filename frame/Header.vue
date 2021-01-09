@@ -64,7 +64,7 @@
           </span>
         </div>
 
-<!--         <div class="dropdown"> 
+        <div class="dropdown"> 
           <span class="nav-item" v-bind:class="{'active-menu': settingFlag === true}" data-toggle="dropdown" id="settings" aria-haspopup="true" aria-expanded="false" v-on:click="makeActive('dropdown')" v-bind:onkeypress="makeActive('')">
             <span>
               <i class="fa fa-bell"></i>
@@ -77,7 +77,7 @@
             </span>
           </span>
         </div>     
- -->
+
         <div class="dropdown" v-if="user.messages.data !== null"> 
             <span class="nav-item" data-toggle="dropdown" id="notifications" aria-haspopup="true" aria-expanded="false">
               <span>
