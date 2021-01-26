@@ -294,6 +294,7 @@ export default {
     },
     hideModal(){
       $('#' + this.property.id).modal('hide')
+      this.errorMessage = null
     },
     validateTyping(item){
       switch(item.validation.type){
@@ -463,7 +464,7 @@ export default {
               this.errorMessage = 'Fields with (*) are required'
               return false
             }else if(item.value !== null && item.validation.size > item.value.length){
-              this.errorMessage = item.label + ' must be greater than equal to ' + item.validation.size
+              this.errorMessage = item.label + ' must be greater than or not equal to ' + item.validation.size
               return false
             } else if(item.value !== '********' && item.type === 'input' && item.inputType === 'password' && item.value !== null && item.validation.type === 'text' && (/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/.test(item.value) === false)) {
               this.errorMessage = 'Password must be alphanumeric characters. It should contain 1 number, 1 special character and 1 capital letter.'
@@ -491,7 +492,7 @@ export default {
             }
           }else if(item.validation.type === 'number'){
             if((item.value === null || item.validation.size > parseFloat(item.value)) && item.required){
-              this.errorMessage = item.label + ' must be greater than equal to ' + item.validation.size
+              this.errorMessage = item.label + ' must be greater than or not equal to ' + item.validation.size
               return false
             }else{
               this.parameter[item.variable] = parseFloat(item.value)
