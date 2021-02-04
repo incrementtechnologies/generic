@@ -460,7 +460,7 @@ export default {
           if(item.type === 'select_increment' || item.type === 'select_specified' || item.type === 'select_decrement'){
             this.parameter[item.variable] = item.value
           }else if(item.validation.type === 'text'){
-            if(item.value === null && item.required){
+            if((item.value === null || item.value === '') && item.required){
               this.errorMessage = 'Fields with (*) are required'
               return false
             }else if(item.value !== null && item.validation.size > item.value.length){
@@ -491,7 +491,7 @@ export default {
               this.parameter[item.variable] = item.value
             }
           }else if(item.validation.type === 'number'){
-            if((item.value === null || item.validation.size > parseFloat(item.value)) && item.required){
+            if((item.value === null || item.value === '' || item.validation.size > parseFloat(item.value)) && item.required){
               this.errorMessage = item.label + ' must be greater than or not equal to ' + item.validation.size
               return false
             }else{
