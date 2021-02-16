@@ -20,7 +20,7 @@
               </p>
                 <span class="image-holder" style="text-align: center;" @click="addImage()">
                   <i class="fa fa-plus" style="font-size: 60px; line-height: 200px;"></i>
-                  <input type="file" id="Image" accept='image/*' @change="setUpFileUpload($event)">
+                  <input type="file" id="Image" :accept="type ? type : 'image/*'" @change="setUpFileUpload($event)">
                 </span>
                 <span v-if="data !== null">
                   <span v-bind:class="{'active-image': item.active === true }" class="image-holder" v-for="(item, index) in filteredData" v-bind:key="index" v-if="getFileType(config.BACKEND_URL + item.url) === 'img'" @click="select(index)">
