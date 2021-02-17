@@ -492,7 +492,7 @@ export default {
             }
           }else if(item.validation.type === 'number'){
             if((item.value === null || item.value === '' || item.validation.size > parseFloat(item.value) || item.value <= 0) && item.required){
-              this.errorMessage = item.label + ' must be greater than or not equal to ' + item.validation.size
+              this.errorMessage = item.label + '  must be greater than or not equal to  ' + item.validation.size
               return false
             }else{
               this.parameter[item.variable] = parseFloat(item.value)
