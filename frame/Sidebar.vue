@@ -50,7 +50,7 @@
       </div>
 
       <div class="content-holder" v-bind:class="hide">
-        <system-notification></system-notification>
+        <!-- <system-notification></system-notification> -->
         <transition >
           <router-view ></router-view>
         </transition>
@@ -414,7 +414,7 @@ export default {
     }
   },
   components: {
-    'system-notification': require('components/increment/generic/system/Notifications.vue')
+    // 'system-notification': require('components/increment/generic/system/Notifications.vue')
   },
   watch: {
     '$route' (to, from) {
