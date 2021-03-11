@@ -9,7 +9,7 @@
       >
     </div>
     <ul>
-      <li v-for="(item, index) in sorted" @click="onSelect(item.title)">{{item.title}}</li>
+      <li v-for="(item, index) in sorted" @click="onSelect(item)">{{item.title}}</li>
     </ul>
   </div>
 </template>
@@ -104,9 +104,10 @@ export default {
         this.sorted = []
       }
     },
-    onSelect(title){
-      this.input = title
+    onSelect(item){
+      this.input = item.title
       this.$emit('input', this.input)
+      this.$emit('selectedItem', item)
       this.sorted = []
     }
   }
