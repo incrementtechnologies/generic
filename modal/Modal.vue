@@ -597,6 +597,7 @@ export default {
               this.errorMessage = null
               this.hideModal()
               if(this.property.route === 'paddock_plans/create') {
+                this.$parent.createdPlan = response.data
                 this.$parent.$parent.retrieve({'name': 'asc'}, {column: 'name', value: ''})
               }
               this.$parent.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
