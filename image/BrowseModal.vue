@@ -232,6 +232,7 @@ export default {
       formData.append('file', this.file)
       formData.append('file_url', this.file.name.replace(' ', '_'))
       formData.append('account_id', this.user.userID)
+      formData.append('category', 'profile')
       $('#loading').css({'display': 'block'})
       console.log('imageRoute', formData)
       axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
@@ -252,6 +253,10 @@ export default {
         condition: [{
           value: this.user.userID,
           column: 'account_id',
+          clause: '='
+        }, {
+          value: 'profile',
+          column: 'category',
           clause: '='
         }],
         sort: {
