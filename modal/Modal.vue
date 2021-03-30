@@ -603,7 +603,8 @@ export default {
               this.$parent.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
             }else if(response.error !== null){
               for(let key of Object.keys(response.error.message)){
-                this.errorMessage = response.error.message[key][0]
+                // this.errorMessage = response.error.message[key][0] || response.error.message
+                this.errorMessage = response.error.message
                 break
               }
             }
