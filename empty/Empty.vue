@@ -11,7 +11,7 @@
     margin-top: 25px;
     margin-bottom: 25px;
     float: left;
-    min-height: 450px;
+    min-height: 350px;
     overflow-y: hidden;
     text-align: center;
     border: solid 1px #ddd;
@@ -19,7 +19,7 @@
 
   .empty i{
     font-size: 100px;
-    padding-top: 150px;
+    padding-top: 100px;
   }
   .empty span{
     width: 100%;
