@@ -616,6 +616,7 @@ export default {
         }else{
           console.log(false)
           this.APIRequest(this.property.route, this.parameter).then(response => {
+            console.log(typeof response.error.message === 'object')
             $('#loading').css({display: 'none'})
             if(response.data !== null){
               this.errorMessage = null
@@ -626,10 +627,18 @@ export default {
               }
               this.$parent.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
             }else if(response.error !== null){
-              for(let key of Object.keys(response.error.message)){
-                // this.errorMessage = response.error.message[key][0] || response.error.message
-                this.errorMessage = response.error.message
-                break
+              if(typeof response.error.message === 'object'){
+                for(let key of Object.keys(response.error.message)){
+                  // this.errorMessage = response.error.message[key][0] || response.error.message
+                  this.errorMessage = response.error.message[key][0]
+                  break
+                }
+              }else{
+                for(let key of Object.keys(response.error.message)){
+                  // this.errorMessage = response.error.message[key][0] || response.error.message
+                  this.errorMessage = response.error.message
+                  break
+                }
               }
             }
           })
