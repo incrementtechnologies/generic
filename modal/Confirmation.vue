@@ -50,6 +50,7 @@ export default {
     },
     hideModal(){
       console.log('hide')
+      this.id = null
       $('#connectionError').modal('hide')
     },
     onConfirm(){
