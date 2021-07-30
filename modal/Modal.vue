@@ -561,14 +561,14 @@ export default {
         this.addParams()
         let date = new Date(Date.now())
         console.log(this.dateFormatter(date))
-        console.log('route', this.property.route)
+        console.log('route', this.property.route, this.parameter)
         if(this.property.route === 'symptoms/create'){
           console.log(true)
           if(this.dateFormatter(date) < this.parameter.date){
             alert('Date is Advance')
             this.$parent.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
           }else{
-            console.log(false)
+            console.log(false, this.parameter)
             this.APIRequest(this.property.route, this.parameter).then(response => {
               $('#loading').css({display: 'none'})
               if(response.data !== null){
