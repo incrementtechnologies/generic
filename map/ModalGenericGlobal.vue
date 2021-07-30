@@ -35,7 +35,6 @@ export default {
   props: ['place_data', 'propStyle'],
   mounted() {
     this.setMap()
-    console.log(this.place_data, this.propStyle)
     // this.interval = setInterval(this.update, 1000)
   },
   data(){
@@ -57,7 +56,6 @@ export default {
   methods: {
     showModal(){
       Jquery('#mapmodal').modal('show')
-      console.log('mao ni ', this.place_data, this.propStyle)
     },
     hideModal(){
       this.interval = null
