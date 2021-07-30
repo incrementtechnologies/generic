@@ -4,7 +4,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title text-primary" id="exampleModalLabel">{{title}}</h5>
-          <button type="button" class="close" @click="hideModal()" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true" class="text-primary">&times;</span>
           </button>
         </div>
@@ -12,7 +12,7 @@
             <label>{{message}}</label>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" @click="hideModal()">No</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
           <button type="button" class="btn btn-primary" @click="onConfirm()">Yes</button>
         </div>
       </div>
@@ -49,6 +49,8 @@ export default {
       $('#connectionError').modal('show')
     },
     hideModal(){
+      console.log('hide')
+      this.id = null
       $('#connectionError').modal('hide')
     },
     onConfirm(){

@@ -30,18 +30,30 @@
 
             <label class="text-danger" v-bind:for="item.id" v-if="(item.type === 'input') && item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))" style="float: left; width: 100%;"><b>Oops!</b> Minimum value is {{item.validation.size}}.</label>
 
-            <!-- Input Tag -->
-            <div class = "input-group">
+          <div class = "input-group" v-if="item.inputType === 'numberCustom'">
             <input 
-              v-bind:type="item.inputType === visibility ? visibility : item.inputType" 
+              @keydown="filterKey"
+              v-bind:type="'number'" 
               class="form-control" 
-              v-model="item.value" 
-              v-if="item.type === 'input'" 
+              v-model="item.value"
               :id="item.id"
               :value="item.value"
               v-bind:placeholder="item.placeholder" 
-              v-bind:class="{'invalid-inputs': (item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))) || (item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)) || (item.value !== null && item.validation.type === 'email' && item.validation.flag === false)}" 
+              v-bind:class="{'invalid-inputs': (item.value !== null && !isNaN(item.value) && item.validation.type === 'numberCustom' && (item.validation.size > parseFloat(item.value))) || (item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)) || (item.value !== null && item.validation.type === 'email' && item.validation.flag === false)}" 
               @keyup="validateTyping(item)" :disabled="item.disabled === true">
+            </div>
+      
+            <div class = "input-group" v-else>
+              <input
+                v-bind:type="item.inputType === visibility ? visibility : item.inputType" 
+                class="form-control" 
+                v-model="item.value" 
+                v-if="item.type === 'input'" 
+                :id="item.id"
+                :value="item.value"
+                v-bind:placeholder="item.placeholder" 
+                v-bind:class="{'invalid-inputs': (item.value !== null && !isNaN(item.value) && item.validation.type === 'number' && (item.validation.size > parseFloat(item.value))) || (item.value !== null && item.validation.type === 'text' && (item.validation.size > item.value.length)) || (item.value !== null && item.validation.type === 'email' && item.validation.flag === false)}" 
+                @keyup="validateTyping(item)" :disabled="item.disabled === true">
               <span class="input-group-addons" v-if="item.id === 'password' && item.value !== '********'">
                 <i v-if="visibility === 'password'" @click="showPassword(item)" class="fa fa-eye" aria-hidden="true"></i>
                 <i v-if="visibility === 'text'" @click="hidePassword(item)" class="fa fa-eye-slash" aria-hidden="true"></i>
@@ -277,6 +289,18 @@ export default {
     DatePicker
   },
   methods: {
+    filterKey(e){
+      const key = e.key
+      // If is '.' key, stop it
+      if(key === '-'){
+        return e.preventDefault()
+      }
+      // OPTIONAL
+      // If is 'e' key, stop it
+      if(key === 'e'){
+        return e.preventDefault()
+      }
+    },
     showPassword(item) {
       item.inputType = 'text'
       this.visibility = 'text'
@@ -592,6 +616,7 @@ export default {
         }else{
           console.log(false)
           this.APIRequest(this.property.route, this.parameter).then(response => {
+            console.log(typeof response.error.message === 'object')
             $('#loading').css({display: 'none'})
             if(response.data !== null){
               this.errorMessage = null
@@ -602,10 +627,18 @@ export default {
               }
               this.$parent.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
             }else if(response.error !== null){
-              for(let key of Object.keys(response.error.message)){
-                // this.errorMessage = response.error.message[key][0] || response.error.message
-                this.errorMessage = response.error.message
-                break
+              if(typeof response.error.message === 'object'){
+                for(let key of Object.keys(response.error.message)){
+                  // this.errorMessage = response.error.message[key][0] || response.error.message
+                  this.errorMessage = response.error.message[key][0]
+                  break
+                }
+              }else{
+                for(let key of Object.keys(response.error.message)){
+                  // this.errorMessage = response.error.message[key][0] || response.error.message
+                  this.errorMessage = response.error.message
+                  break
+                }
               }
             }
           })

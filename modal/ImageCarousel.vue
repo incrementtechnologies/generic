@@ -16,6 +16,14 @@
         </span>
         <button class="btn btn-warning pull-right" @click="redirectExternal(data[activeIndex].link)">ORDER NOW</button>
       </div>
+      <div v-if="data[activeIndex].type === 'redirect_link'" class="actions actions-secondary"  :key="'a' + activeIndex">
+        <span class="text">
+          <label class="title pull-left">
+            <b>{{data[activeIndex].text}}</b>
+          </label>
+        </span>
+        <button class="btn btn-primary pull-right" @click="redirectExternal(data[activeIndex].link)">PURCHASE NOW</button>
+      </div>
     </div>
   </div>
 </template>
@@ -84,6 +92,15 @@
   bottom: 0;
   left: 0;
   background: rgba(0, 0, 0, .5);
+  width: 100%;
+  text-align: left;
+}
+
+.actions-secondary{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: $warning;
   width: 100%;
   text-align: left;
 }
