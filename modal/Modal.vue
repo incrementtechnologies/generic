@@ -492,7 +492,6 @@ export default {
               return false
             } else if(item.value !== '********' && item.type === 'input' && item.inputType === 'password' && item.value !== null && item.validation.type === 'text' && (/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/.test(item.value) === false)) {
               this.errorMessage = 'Password must be alphanumeric characters. It should contain 1 number, 1 special character and 1 capital letter.'
-              console.log(item)
               return false
             } else{
               this.parameter[item.variable] = item.value
@@ -584,15 +583,11 @@ export default {
       if(this.validate()){
         this.addParams()
         let date = new Date(Date.now())
-        console.log(this.dateFormatter(date))
-        console.log('route', this.property.route)
         if(this.property.route === 'symptoms/create'){
-          console.log(true)
           if(this.dateFormatter(date) < this.parameter.date){
             alert('Date is Advance')
             this.$parent.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
           }else{
-            console.log(false)
             this.APIRequest(this.property.route, this.parameter).then(response => {
               $('#loading').css({display: 'none'})
               if(response.data !== null){
@@ -614,9 +609,7 @@ export default {
           this.$parent.retrieveModalValue(this.parameter)
           $('#loading').css({display: 'none'})
         }else{
-          console.log(false)
           this.APIRequest(this.property.route, this.parameter).then(response => {
-            console.log(typeof response.error.message === 'object')
             $('#loading').css({display: 'none'})
             if(response.data !== null){
               this.errorMessage = null
