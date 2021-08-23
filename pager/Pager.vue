@@ -42,7 +42,7 @@
 
 .bg-primary{
   color: #ffffff !important;
-  background: $primary !important;
+  background: $darkPrimary !important;
 }
 @media (max-width: 992px){
 }
