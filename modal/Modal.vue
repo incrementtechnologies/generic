@@ -616,7 +616,6 @@ export default {
       return [year, month, day].join('-')
     },
     clearTheNextDate(){
-      console.log('trigger')
       if(this.previousDateIndex === null){
         //
       }else{
