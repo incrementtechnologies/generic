@@ -351,7 +351,8 @@ export default {
       return date > new Date()
     },
     disablePreviousDates(date) {
-      return date < new Date()
+      var d = new Date()
+      return date < new Date(d.setDate(d.getDate() - 1))
     },
     hideModal(){
       $('#' + this.property.id).modal('hide')
