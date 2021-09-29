@@ -18,11 +18,8 @@
 }
 .results-holder{
   width: 100%;
-<<<<<<< HEAD
   position: static;
-=======
   position: relative;
->>>>>>> 8382e13be4d02d90a103e6cb74b8d58124ae400a
   background: white;
   z-index: 10000;
   border-bottom: solid 1px $gray;
