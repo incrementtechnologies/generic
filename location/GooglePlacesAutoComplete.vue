@@ -18,7 +18,7 @@
 }
 .results-holder{
   width: 100%;
-  position: absolute;
+  position: static;
   background: white;
   z-index: 10000;
   border-bottom: solid 1px $gray;
