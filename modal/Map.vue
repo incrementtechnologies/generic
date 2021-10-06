@@ -9,15 +9,17 @@
           </button>
         </div>
         <div class="modal-body">
-          <vue-google-autocomplete
-              ref="address"
-              id="map"
-              classname="form-control"
-              placeholder="Please type your address"
-              v-on:placechanged="getAddressData"
-              country="sg"
-          >
-          </vue-google-autocomplete>
+          <div>
+            <vue-google-autocomplete
+                ref="address"
+                id="map"
+                classname="form-control"
+                placeholder="Please type your address"
+                v-on:placechanged="getAddressData"
+                country="sg"
+            >
+            </vue-google-autocomplete>
+          </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-danger" @click="hideModal()">Cancel</button>
@@ -76,6 +78,9 @@ export default {
   methods: {
     hideModal(){
       $('#selectLocationModal').modal('hide')
+    },
+    showModal(){
+      $('#selectLocationModal').modal('show')
     },
     getAddressData(addressData, placeResultData, id) {
       console.log(addressData)
