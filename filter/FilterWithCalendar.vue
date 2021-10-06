@@ -9,7 +9,7 @@
       <button class="btn btn-primary select-btn dropdown" v-if="category.length === 1">
           {{category[0].title}}
       </button>
-      <select class="btn btn-secondary select-btn dropdown" v-model="sortValue" @change="changeSort" v-if="activeSort !== null">
+      <select class="btn btn-warning select-btn dropdown" v-model="sortValue" @change="changeSort" v-if="activeSort !== null">
         <option class="dropdown-title" v-for="(item, index) in activeSort" :value="index" :key="index">
           {{item.title}}
         </option>
