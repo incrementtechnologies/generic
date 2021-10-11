@@ -19,10 +19,6 @@
 .results-holder{
   width: 100%;
   position: static;
-<<<<<<< HEAD
-=======
-  position: relative;
->>>>>>> 42a09c2418ec1bcc4a204415a687a03ab93b4d0a
   background: white;
   z-index: 10000;
   border-bottom: solid 1px $gray;
