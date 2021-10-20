@@ -45,16 +45,21 @@ export default {
   props: ['title', 'message'],
   methods: {
     show(id){
+      console.log('[confirm]', id)
       this.id = id
       $('#connectionError').modal('show')
     },
     hideModal(){
       console.log('hide')
+      this.title = null
+      this.message = null
       $('#connectionError').modal('hide')
     },
     onConfirm(){
       this.$emit('onConfirm', {id: this.id})
       this.id = null
+      this.title = null
+      this.message = null
       this.hideModal()
     }
   }
