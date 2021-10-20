@@ -120,6 +120,22 @@
               :input-attr="{style: 'min-height: 50px !important;'}"
             ></date-picker>
 
+            <!-- DateTime start from props -->
+            <date-picker
+              v-if="item.type === 'dateStartFromProps'"
+              v-model="item.value"
+              :disabled-date="item.disabledDate"
+              :type="'date'"
+              :value-type="'YYYY-MM-DD'"
+              :use12h="true"
+              :id="item.id"
+              :placeholder="item.placeholder"
+              :format="'MMM D, YYYY'"
+              :input-class="'form-control'"
+              @input="clearTheNextDate"
+              :input-attr="{style: 'min-height: 50px !important;'}"
+            ></date-picker>
+
             <!-- DateTime with limit from props -->
             <date-picker
               v-if="item.type === 'dateLimitFromProps'"
