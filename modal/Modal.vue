@@ -238,7 +238,11 @@
 
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" v-if="property.buttonPosition && property.buttonPosition === 'side-to-side'">
+            <button type="button" class="btn btn-primary mr-auto" @click="$parent.showConfirmation(property.params)">{{property.button.right}}</button>
+            <button type="button" class="btn btn-danger" @click="hideModal()">{{property.button.left}}</button>
+        </div>
+        <div class="modal-footer" v-else>
             <button type="button" class="btn btn-danger" @click="hideModal()">{{property.button.left}}</button>
             <button type="button" class="btn btn-primary" @click="submit()">{{property.button.right}}</button>
         </div>
