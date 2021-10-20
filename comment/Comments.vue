@@ -12,12 +12,12 @@
             {{commentItem.text}}
           </label>
         </span>
-        <span class="comment-footer">
+        <!-- <span class="comment-footer">
           <ul class="footer-menu">
             <li v-on:click="newReply(commentIndex)"><i class="fa fa-reply"></i> Reply</li>
           </ul>
-        </span>
-        <span class="comment-item-reply">
+        </span> -->
+        <!-- <span class="comment-item-reply">
           <span class="reply-item"  v-for="replyItem, replyIndex in commentItem.comment_replies"v-if="commentItem.comment_replies !== null">
             <span class="reply-header">
               <img v-bind:src="config.BACKEND_URL + replyItem.account.profile.url" v-if="replyItem.account.profile !== null">
@@ -36,7 +36,7 @@
             </label>
             <input type="text" class="form-control" placeholder="Write a reply..." v-model="newReplyInput" @keyup.enter="reply(commentItem.id)"/>
           </span>
-        </span>
+        </span> -->
       </span>
       <span class="new-comment">
         <img v-bind:src="config.BACKEND_URL + user.profile.url" v-if="user.profile !== null">

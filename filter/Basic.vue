@@ -1,9 +1,9 @@
 <template>
   <div class="filter">
     <div class="input-group">
-      <button class="btn btn-primary select-btn text-left">Sort by
+      <button class="btn btn-primary select-btn text-left" :style="sortByStyle ? sortByStyle : {}">Sort by
       </button>
-      <select class="btn btn-warning select-btn dropdown" v-model="sortValue" @change="changeSort" v-if="activeSort !== null">
+      <select class="btn btn-warning select-btn dropdown" v-model="sortValue" @change="changeSort" v-if="activeSort !== null" :style="dropDownStyle ? dropDownStyle : {}">
         <option class="dropdown-title" v-for="(item, index) in activeSort" :value="index" :key="index">
           {{item.title}}
         </option>
@@ -129,7 +129,7 @@ export default {
       toggleFlag: false
     }
   },
-  props: ['category', 'activeCategoryIndex', 'activeSortingIndex', 'grid'],
+  props: ['category', 'activeCategoryIndex', 'activeSortingIndex', 'grid', 'sortByStyle', 'dropDownStyle'],
   methods: {
     redirect(parameter){
       ROUTER.push(parameter)

@@ -51,8 +51,7 @@ export default {
     },
     hideModal(){
       console.log('hide')
-      this.title = null
-      this.message = null
+      this.id = null
       $('#connectionError').modal('hide')
     },
     onConfirm(){

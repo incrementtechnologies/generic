@@ -103,6 +103,39 @@
               :input-attr="{style: 'min-height: 50px !important;'}"
             ></date-picker>
 
+
+            <!-- DateTime with limit -->
+            <date-picker
+              v-if="item.type === 'dateLimitPreviousDate'"
+              v-model="item.value"
+              :disabled-date="disablePreviousDates"
+              :type="'date'"
+              :value-type="'YYYY-MM-DD'"
+              :use12h="true"
+              :id="item.id"
+              :placeholder="item.placeholder"
+              :format="'MMM D, YYYY'"
+              :input-class="'form-control'"
+              @input="clearTheNextDate"
+              :input-attr="{style: 'min-height: 50px !important;'}"
+            ></date-picker>
+
+            <!-- DateTime start from props -->
+            <date-picker
+              v-if="item.type === 'dateStartFromProps'"
+              v-model="item.value"
+              :disabled-date="item.disabledDate"
+              :type="'date'"
+              :value-type="'YYYY-MM-DD'"
+              :use12h="true"
+              :id="item.id"
+              :placeholder="item.placeholder"
+              :format="'MMM D, YYYY'"
+              :input-class="'form-control'"
+              @input="clearTheNextDate"
+              :input-attr="{style: 'min-height: 50px !important;'}"
+            ></date-picker>
+
             <!-- DateTime with limit from props -->
             <date-picker
               v-if="item.type === 'dateLimitFromProps'"
@@ -116,6 +149,22 @@
               :format="'MMM D, YYYY'"
               :input-class="'form-control'"
               :input-attr="{style: 'min-height: 50px !important;'}"
+            ></date-picker>
+
+            <!-- 2 Dates Controlled Data -->
+            <date-picker
+              v-if="item.type === 'dateWithLimitsFromOtherField'"
+              v-model="item.value"
+              :disabled-date="afterPreviousDate"
+              :type="'date'"
+              :value-type="'YYYY-MM-DD'"
+              :use12h="true"
+              :id="item.id"
+              :placeholder="item.placeholder"
+              :format="'MMM D, YYYY'"
+              :input-class="'form-control'"
+              :input-attr="{style: 'min-height: 50px !important;'}"
+              :default-value="setDefaultValue(item.previosDateInputIndex)"
             ></date-picker>
 
             <!-- DateTime Tag -->
@@ -284,7 +333,8 @@ export default {
         },
         monthBeforeYear: false
       },
-      visibility: 'password'
+      visibility: 'password',
+      previousDateIndex: null
     }
   },
   props: ['property'],
@@ -319,6 +369,10 @@ export default {
     },
     disabledDates(date) {
       return date > new Date()
+    },
+    disablePreviousDates(date) {
+      var d = new Date()
+      return date < new Date(d.setDate(d.getDate() - 1))
     },
     hideModal(){
       $('#' + this.property.id).modal('hide')
@@ -496,7 +550,6 @@ export default {
               return false
             } else if(item.value !== '********' && item.type === 'input' && item.inputType === 'password' && item.value !== null && item.validation.type === 'text' && (/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/.test(item.value) === false)) {
               this.errorMessage = 'Password must be alphanumeric characters. It should contain 1 number, 1 special character and 1 capital letter.'
-              console.log(item)
               return false
             } else{
               this.parameter[item.variable] = item.value
@@ -583,20 +636,57 @@ export default {
       }
       return [year, month, day].join('-')
     },
+    clearTheNextDate(){
+      if(this.previousDateIndex === null){
+        //
+      }else{
+        let index = this.previousDateIndex
+        if(this.property.inputs.length === 0 || (this.property.inputs.length > 0 && this.property.inputs[index + 1].value !== null)){
+          this.$emit('clearTheNextDateTrigger', this.previousDateIndex + 1)
+        }
+      }
+    },
+    afterPreviousDate(date){
+      if(this.previousDateIndex === null){
+        return null
+      }
+      let index = this.previousDateIndex
+      if(this.property.inputs.length === 0 || (this.property.inputs.length > 0 && this.property.inputs[index].value === null)){
+        return null
+      }
+      let previousDate = this.property.inputs[index]
+      return date < new Date(previousDate.value)
+    },
+    setOpenDate(index){
+      this.previousDateIndex = index
+      if(this.property.inputs.length === 0){
+        return false
+      }
+      if(this.property.inputs[index].value === null){
+        return false
+      }
+      return true
+    },
+    setDefaultValue(index){
+      this.previousDateIndex = index
+      if(this.property.inputs.length === 0){
+        return null
+      }
+      if(this.property.inputs[index].value === null){
+        return null
+      }
+      return this.property.inputs[index].value
+    },
     submit(){
       $('#loading').css({display: 'block'})
       if(this.validate()){
         this.addParams()
         let date = new Date(Date.now())
-        console.log(this.dateFormatter(date))
-        console.log('route', this.property.route)
         if(this.property.route === 'symptoms/create'){
-          console.log(true)
           if(this.dateFormatter(date) < this.parameter.date){
             alert('Date is Advance')
             this.$parent.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
           }else{
-            console.log(false)
             this.APIRequest(this.property.route, this.parameter).then(response => {
               $('#loading').css({display: 'none'})
               if(response.data !== null){
@@ -618,9 +708,7 @@ export default {
           this.$parent.retrieveModalValue(this.parameter)
           $('#loading').css({display: 'none'})
         }else{
-          console.log(false)
           this.APIRequest(this.property.route, this.parameter).then(response => {
-            console.log(typeof response.error.message === 'object')
             $('#loading').css({display: 'none'})
             if(response.data !== null){
               this.errorMessage = null

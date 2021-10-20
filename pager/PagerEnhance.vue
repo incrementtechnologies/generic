@@ -7,7 +7,7 @@
             {{parseInt(item * 5)}}
           </option>
         </select>
-      </li>
+      </li>&nbsp;
       <li class="page-item" v-if="active > 1"><span class="page-link" @click="onPrevious()">Previous</span></li>
       <li class="page-item" v-if="active >= 2"><span class="page-link" @click="onSelectedPage(active - 1)">{{active - 1}}</span></li>
       <li class="page-item"><span class="page-link bg-primary" @click="onSelectedPage(active)">{{active}}</span></li>
@@ -25,10 +25,13 @@
   height: 50px;
 }
 
+select {
+    color: $secondary; 
+}
 
 .btn-default{
   height: 40px !important;
-  border: solid 1px #ccc !important;
+  border: solid 1px $secondary !important;
 }
 
 
@@ -42,7 +45,7 @@
 
 .bg-primary{
   color: #ffffff !important;
-  background: $darkPrimary !important;
+  background: $secondary !important;
 }
 @media (max-width: 992px){
 }

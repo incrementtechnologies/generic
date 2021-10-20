@@ -66,7 +66,7 @@ export default {
         this.setInitialView(coordinates)
       })
     },
-    useLocation(){
+    useLocation(event){
       if(this.selectedLocation === null){
         return
       }
@@ -89,7 +89,11 @@ export default {
     storeLocation(location){
       this.selectedLocation = location
     },
-    setMarker(){
+    setMarker(locationSet){
+      if(locationSet != null){
+        this.location = locationSet
+      }
+      console.log('[]dsf', this.location)
       if(this.location == null){
         return
       }
