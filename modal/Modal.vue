@@ -637,9 +637,7 @@ export default {
         //
       }else{
         let index = this.previousDateIndex
-        console.log('--')
         if(this.property.inputs.length === 0 || (this.property.inputs.length > 0 && this.property.inputs[index + 1].value !== null)){
-          console.log('-----')
           this.$emit('clearTheNextDateTrigger', this.previousDateIndex + 1)
         }
       }
