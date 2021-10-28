@@ -1,6 +1,6 @@
 <template>
   <ul>
-    <li class="loading" v-for="(i, index) in size" :key="index" :style="'height: ' + height">
+    <li class="loading" v-for="(i, index) in size" :key="index" :style="styleData">
       <span class="bar" ></span>
     </li>
   </ul>
@@ -9,7 +9,7 @@
 import VueSkeletonLoader from 'skeleton-loader-vue'
 export default {
   components: { VueSkeletonLoader },
-  props: ['size', 'height']
+  props: ['size', 'styleData']
 }
 </script>
 <style scoped lang="scss">
@@ -18,35 +18,48 @@ export default {
   width: 100%;
   margin-bottom: 10px;
   background: #eee;
-  -webkit-animation: pulse 1s infinite ease-in-out;
-          animation: pulse 1s infinite ease-in-out;
+  -moz-animation: showHide 5s ease-in alternate infinite; /* Firefox */
+  -webkit-animation: showHide 5s ease-in alternate infinite; /* Safari and Chrome */
+  -ms-animation: showHide 5s ease-in alternate infinite; /* IE10 */
+  -o-animation: showHide 5s ease-in alternate infinite; /* Opera */
+  animation: showHide 5s ease-in alternate infinite;
 }
+
+@-webkit-keyframes showHide { /* Chrome, Safari */
+    0% {width:100%}
+    40% {width:0%}
+    60% {width:0%;}
+    100% {width:100%;}
+}
+@-moz-keyframes showHide { /* FF */
+    0% {width:100%}
+    40% {width:0%}
+    60% {width:0%;}
+    100% {width:100%;}
+}
+@-ms-keyframes showHide { /* IE10 */
+    0% {width:100%}
+    40% {width:0%}
+    60% {width:0%;}
+    100% {width:100%;}
+}
+@-o-keyframes showHide { /* Opera */
+    0% {width:100%}
+    40% {width:0%}
+    60% {width:0%;}
+    100% {width:100%;}
+}
+@keyframes showHide {
+    0% {width:100%}
+    40% {width:0%}
+    60% {width:0%;}
+    100% {width:100%;}
+}
+
 ul{
   list-style: none;
   width: 100%;
   margin: 0;
   padding: 0;
-}
-.loading {
-  position: relative;
-
-  .bar {
-    background-color: $gray;
-    border-radius: 7px;
-    width: 100%;
-  }
-  &:after {
-      position: absolute;
-      transform: translateY(-50%);
-      top: 50%;
-      left: 0;
-      content: "";
-      display: block;
-      width: 100%;
-      height: 24px;
-      background-image: linear-gradient( 100deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.5) 60%, rgba(255, 255, 255, 0) 80% );
-      background-repeat: no-repeat;
-      animation: loading 1s infinite;
-  }
 }
 </style>
