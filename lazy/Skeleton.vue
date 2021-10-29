@@ -27,32 +27,32 @@ export default {
 
 @-webkit-keyframes showHide { /* Chrome, Safari */
     0% {width:100%}
-    40% {width:0%}
-    60% {width:0%;}
+    40% {width:60%}
+    60% {width:40%;}
     100% {width:100%;}
 }
 @-moz-keyframes showHide { /* FF */
     0% {width:100%}
-    40% {width:0%}
-    60% {width:0%;}
+    40% {width:60%}
+    60% {width:40%;}
     100% {width:100%;}
 }
 @-ms-keyframes showHide { /* IE10 */
     0% {width:100%}
-    40% {width:0%}
-    60% {width:0%;}
+    40% {width:60%}
+    60% {width:40%;}
     100% {width:100%;}
 }
 @-o-keyframes showHide { /* Opera */
     0% {width:100%}
-    40% {width:0%}
-    60% {width:0%;}
+    40% {width:60%}
+    60% {width:40%;}
     100% {width:100%;}
 }
 @keyframes showHide {
     0% {width:100%}
-    40% {width:0%}
-    60% {width:0%;}
+    40% {width:60%}
+    60% {width:40%;}
     100% {width:100%;}
 }
 
