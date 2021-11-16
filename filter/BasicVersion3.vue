@@ -34,7 +34,7 @@
         :placeholder="'Search date'"
         :format="'MMM D, YYYY'"
         :input-class="'form-control'"
-        :input-attr="{style: 'height: 40px !important; width: 100% !important; border-right-style: none;'}"
+        :input-attr="{style: 'height: 50px !important; width: 100% !important;'}"
       ></date-picker>
 
       <!-- Date Tag -->
