@@ -707,6 +707,11 @@ export default {
           this.hideModal()
           this.$parent.retrieveModalValue(this.parameter)
           $('#loading').css({display: 'none'})
+        }else if(this.property.route === 'custom_update'){
+          this.errorMessage = null
+          this.hideModal()
+          this.$parent.update(this.parameter)
+          $('#loading').css({display: 'none'})
         }else{
           this.APIRequest(this.property.route, this.parameter).then(response => {
             $('#loading').css({display: 'none'})
