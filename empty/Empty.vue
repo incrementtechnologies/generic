@@ -1,6 +1,8 @@
 <template>
   <div class="empty">
-    <i class="fas fa-hourglass-start text-danger"></i>
+    <!-- <div class="icon"> -->
+      <i class="fas fa-hourglass-start text-danger icon"></i>
+    <!-- </div> -->
     <span class="description text-danger"><b>{{title}}</b></span>
     <span style="font-size: 15px;">{{action}}</span>
   </div>
@@ -17,7 +19,7 @@
     border: solid 1px #ddd;
   }
 
-  .empty i{
+  .empty .icon{
     font-size: 100px;
     padding-top: 100px;
   }
