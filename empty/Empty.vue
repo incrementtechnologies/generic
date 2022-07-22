@@ -30,6 +30,7 @@
 
   .empty .description{
     font-size: 24px;
+    margin-top: 2%;
   }
 </style>
 <script>
