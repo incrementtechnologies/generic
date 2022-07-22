@@ -238,6 +238,7 @@ export default {
       axios.post(this.config.BACKEND_URL + '/images/upload?token=' + AUTH.tokenData.token, formData).then(response => {
         $('#loading').css({'display': 'none'})
         if(response.data.data !== null){
+          this.filteredData = null
           this.retrieve()
         }
       })
